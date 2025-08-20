@@ -125,6 +125,7 @@ The server will start on:
 
 
 ### 📂 Project Structure
+```bash
 server/
 │── src/
 │   ├── config/
@@ -139,4 +140,5 @@ server/
 ├── .gitignore               # Git ignored files
 ├── package.json             # Project dependencies
 ├── tsconfig.json            # TypeScript config
-└── README.md                # Project documentation -->
+└── README.md                # Project documentation
+```
