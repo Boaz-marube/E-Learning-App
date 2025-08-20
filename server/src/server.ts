@@ -25,6 +25,7 @@ app.use(cors());
     // Register all routes
     registerRoutes(app);
 
+    
     // Start server
     app.listen(PORT, () => {
       console.log(`🚀 Server listening on port ${PORT}`);

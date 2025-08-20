@@ -9,7 +9,7 @@ export const registerRoutes = (app: Express): void => {
 //   app.use("/api/enrollments", enrollmentRoutes);
 
   // Test root
-  app.get("/", (_, res) => {
+  app.get("/health", (_, res) => {
     res.send("E-learning API is running...");
   });
 };
