@@ -1,23 +1,30 @@
 import dotenv from "dotenv";
+import { z } from "zod";
+
 dotenv.config();
 
-const MONGO_USERNAME:string = process.env.MONGO_USERNAME || '';
-const MONGO_PASSWORD:string = process.env.MONGO_PASSWORD || '';
+// Define a schema for all environment variables
+const envSchema = z.object({
+  MONGO_USERNAME: z.string().min(1, "MONGO_USERNAME is required"),
+  MONGO_PASSWORD: z.string().min(1, "MONGO_PASSWORD is required"),
+  SERVER_PORT: z.string().default("8090").transform(Number), // coercion to number
+  SERVER_ROUNDS: z.string().default("10").transform(Number),
+  // JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
+});
 
-const MONGO_URL: string = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.i6679dv.mongodb.net/elearningdb?retryWrites=true&w=majority&appName=Cluster0`;
+const env = envSchema.parse(process.env);
 
-
-const PORT:number = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT): 8090;
-const ROUNDS:number = process.env.SERVER_ROUNDS ? Number(process.env.SERVER_ROUNDS) : 10;
+const MONGO_URL = `mongodb+srv://${env.MONGO_USERNAME}:${env.MONGO_PASSWORD}@cluster0.i6679dv.mongodb.net/elearningdb?retryWrites=true&w=majority&appName=Cluster0`;
 
 export const config = {
   mongo: {
     url: MONGO_URL,
   },
   server: {
-    port: PORT,
+    port: env.SERVER_PORT,
+    rounds: env.SERVER_ROUNDS,
   },
-//   jwt: {
-//     secret: process.env.JWT_SECRET,
-//   },
+  // jwt: {
+  //   secret: env.JWT_SECRET,
+  // },
 };

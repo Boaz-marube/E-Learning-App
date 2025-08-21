@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { config } from "./config/config";
 import { registerRoutes } from "./routes";
+import { ErrorMiddleware } from "./middleware/errorMiddleware";
 
 const PORT = config.server.port;
 const app: Express = express();
@@ -25,7 +26,9 @@ app.use(cors());
     // Register all routes
     registerRoutes(app);
 
-    
+    app.use(ErrorMiddleware);
+
+
     // Start server
     app.listen(PORT, () => {
       console.log(`🚀 Server listening on port ${PORT}`);
