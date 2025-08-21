@@ -1,5 +1,6 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
+import { UserRole } from "../../../types/shared";
 
 // Email regex pattern
 const emailRegexPattern: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -11,7 +12,7 @@ export interface IUser extends Document {
     public_id: string;
     url: string;
   };
-  role: string;
+  role: UserRole;
   isVerified: boolean;
   courses: Array<{ courseId: string }>;
   comparePassword(password: string): Promise<boolean>;
@@ -47,7 +48,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "user",
+      enum: Object.values(UserRole),  // Add enum validation
+      default: UserRole.STUDENT, 
     },
     isVerified: {
       type: Boolean,

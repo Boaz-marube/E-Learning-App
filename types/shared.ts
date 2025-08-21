@@ -1,8 +1,15 @@
+// User roles enum
+export enum UserRole {
+  STUDENT = 'student',
+  INSTRUCTOR = 'instructor',
+  ADMIN = 'admin'
+}
+
 export interface User {
     _id: string;
     name: string;
     email: string;
-    role: string;
+    role: UserRole;
     isVerified: boolean;
     avatar?: {
       public_id: string;

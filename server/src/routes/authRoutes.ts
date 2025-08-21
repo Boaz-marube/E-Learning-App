@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { signup, login, resetPassword } from '../controllers/authController';
 import { authMiddleware } from '../middleware/authMiddleware';
+import { adminOnly } from '../middleware/roleMiddleware';
 
 const router = Router();
 
@@ -17,5 +18,10 @@ router.get('/profile', authMiddleware, (req, res) => {
     data: req.user
   });
 });
+
+// using role middleware
+router.get('/admin-only', authMiddleware, adminOnly, (req, res) => {
+    res.json({ message: 'Admin access granted' });
+  });
 
 export default router;

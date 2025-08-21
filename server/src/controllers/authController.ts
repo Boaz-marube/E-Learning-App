@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import UserModel from '../models/userModel';
 import { generateToken } from '../utils/jwt';
-import { ApiResponse, AuthResponse } from '../../../types/shared';
+import { ApiResponse, AuthResponse, UserRole } from '../../../types/shared';
 import ErrorHandler from '../utils/errorHandler';
 import { Types } from 'mongoose';
 
@@ -9,7 +9,7 @@ interface SignupRequest {
   name: string;
   email: string;
   password: string;
-  role?: 'student' | 'instructor';
+  role?: UserRole;
 }
 
 interface LoginRequest {
@@ -19,7 +19,7 @@ interface LoginRequest {
 
 export const signup = async (req: Request<{}, AuthResponse, SignupRequest>, res: Response<AuthResponse>, next: NextFunction) => {
   try {
-    const { name, email, password, role = 'student' } = req.body;
+    const { name, email, password, role = UserRole.STUDENT } = req.body;
 
     // Check if user exists
     const existingUser = await UserModel.findOne({ email });
