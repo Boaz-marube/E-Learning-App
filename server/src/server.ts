@@ -26,6 +26,7 @@ app.use(cors());
     // Register all routes
     registerRoutes(app);
 
+
     app.use(ErrorMiddleware);
 
 

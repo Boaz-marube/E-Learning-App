@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "start": "node ./dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "dev:compiled": "concurrently \"tsc -w\" \"nodemon ./dist/server.js\"",
     "clean": "rimraf dist",
     "type-check": "tsc --noEmit"
@@ -26,6 +26,7 @@
     "nodemon": "^3.1.10",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"
   },
   "dependencies": {
