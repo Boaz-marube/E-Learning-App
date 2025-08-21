@@ -174,15 +174,6 @@ curl -X POST http://localhost:8090/api/auth/login \
 
 This project is licensed under the MIT License.
 
----
-
-## 👨‍💻 Author
-
-**Boaz Marube**  
-- GitHub: [@Boaz-marube](https://github.com/Boaz-marube)
-- Email: boazmarube@gmail.com
-
----
 
 ## 👥 Contributors
 
@@ -190,6 +181,6 @@ This project is licensed under the MIT License.
 |------|------|--------|
 | [Boaz Marube] | Full Stack Developer | [@Boaz-marube](https://github.com/Boaz-marube) |
 | [Bereket Eshete] | Full Stack Developer | [@Bereket-Eshete](https://github.com/Bereket-Eshete) |
-| [Sena Kebede] | Full Stack Developer | [@SenaKebe](https://github.com/SenaKebe) |
-| [Mahder Hawaz] | Gen AI Developer | [@mahderhawaz](https://github.com/mahderhawaz) |
+| [Sena Kebede] | Gen AI Developer | [@SenaKebe](https://github.com/SenaKebe) |
+| [Mahder Hawaz] | Full Stack Developer | [@mahderhawaz](https://github.com/mahderhawaz) |
 | [Solomon Nderitu] | Gen AI Developer | [@Solomon-Nderit](https://github.com/Solomon-Nderit) |
