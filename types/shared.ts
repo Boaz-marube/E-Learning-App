@@ -133,7 +133,7 @@ export interface User {
     _id: string;
     userId: string;
     courseId?: string;
-    type: 'course_completion' | 'quiz_master' | 'streak' | 'first_course' | 'fast_learner';
+    type: 'course_completion' | 'quiz_master' | 'streak' | 'first_course' | 'fast_learner' | 'course_creator' | 'top_instructor' | 'student_milestone';
     title: string;
     description: string;
     badgeUrl?: string;
@@ -152,6 +152,73 @@ export interface User {
       lastAccessed: Date;
       progressPercentage: number;
     }[];
+  }
+
+  export interface InstructorDashboardStats {
+    totalCoursesCreated: number;
+    totalStudentsEnrolled: number;
+    totalRevenue: number;
+    averageRating: number;
+    completionRate: number;
+    recentEnrollments: {
+      studentName: string;
+      courseTitle: string;
+      enrolledAt: Date;
+    }[];
+    topPerformingCourses: {
+      courseTitle: string;
+      enrollmentCount: number;
+      rating: number;
+      revenue: number;
+    }[];
+  }
+
+  export interface CourseAnalytics {
+    courseId: string;
+    courseTitle: string;
+    totalEnrollments: number;
+    activeStudents: number;
+    completedStudents: number;
+    averageProgress: number;
+    averageTimeSpent: number;
+    completionRate: number;
+    rating: number;
+    revenue: number;
+    enrollmentTrend: {
+      month: string;
+      enrollments: number;
+    }[];
+  }
+
+  export interface InstructorEarnings {
+    totalRevenue: number;
+    monthlyRevenue: number;
+    pendingPayouts: number;
+    completedPayouts: number;
+    revenueByMonth: {
+      month: string;
+      revenue: number;
+    }[];
+    topEarningCourses: {
+      courseTitle: string;
+      revenue: number;
+      enrollments: number;
+    }[];
+  }
+
+  export interface InstructorStudent {
+    _id: string;
+    name: string;
+    email: string;
+    enrolledCourses: {
+      courseId: string;
+      courseTitle: string;
+      enrolledAt: Date;
+      progress: number;
+      isCompleted: boolean;
+    }[];
+    totalCoursesEnrolled: number;
+    averageProgress: number;
   }
   
   export interface ApiResponse<T = any> {
