@@ -7,7 +7,7 @@ import uploadRoutes from "./uploadRoutes";
 import contentRoutes from "./contentRoutes";
 import studentRoutes from "./studentRoutes";
 import instructorRoutes from "./instructorRoutes";
-// import courseRoutes from "./courseRoutes";
+import courseRoutes from "./courseRoutes";
 // import enrollmentRoutes from "./enrollmentRoutes";
 
 export const registerRoutes = (app: Express): void => {
@@ -19,7 +19,7 @@ export const registerRoutes = (app: Express): void => {
   app.use("/api/content", contentRoutes);
   app.use("/api/student", studentRoutes);
   app.use("/api/instructor", instructorRoutes);
-  // app.use("/api/courses", courseRoutes);
+  app.use("/api/courses", courseRoutes);
   // app.use("/api/enrollments", enrollmentRoutes);
 
   // Health check

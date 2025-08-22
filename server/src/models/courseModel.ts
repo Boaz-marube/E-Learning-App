@@ -35,6 +35,15 @@ const courseSchema = new Schema<ICourse>({
     enum: ['beginner', 'intermediate', 'advanced'],
     required: true
   },
+  category: {
+    type: String,
+    required: [true, 'Course category is required'],
+    trim: true
+  },
+  tags: {
+    type: [String],
+    default: []
+  },
   thumbnail: {
     type: String,
     default: ''
