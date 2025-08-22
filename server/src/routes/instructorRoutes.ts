@@ -9,7 +9,11 @@ import {
   createCourse,
   updateCourse,
   deleteCourse,
-  getCourse
+  getCourse,
+  createLesson,
+  getCourseLessonsForInstructor,
+  updateLesson,
+  deleteLesson
 } from '../controllers/instructorController';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { roleMiddleware } from '../middleware/roleMiddleware';
@@ -34,5 +38,11 @@ router.get('/courses/:courseId', getCourse);
 router.put('/courses/:courseId', updateCourse);
 router.delete('/courses/:courseId', deleteCourse);
 router.post('/courses/:courseId/publish', publishCourse);
+
+// Lesson management
+router.post('/courses/:courseId/lessons', createLesson);
+router.get('/courses/:courseId/lessons', getCourseLessonsForInstructor);
+router.put('/courses/:courseId/lessons/:lessonId', updateLesson);
+router.delete('/courses/:courseId/lessons/:lessonId', deleteLesson);
 
 export default router;
