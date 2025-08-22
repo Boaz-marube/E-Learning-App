@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { signup, login, resetPassword } from '../controllers/authController';
+import { signup, login, resetPassword,getUserCourses } from '../controllers/authController';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { adminOnly } from '../middleware/roleMiddleware';
 
@@ -24,4 +24,5 @@ router.get('/admin-only', authMiddleware, adminOnly, (req, res) => {
     res.json({ message: 'Admin access granted' });
   });
 
+router.get('/courses', authMiddleware, getUserCourses);
 export default router;
