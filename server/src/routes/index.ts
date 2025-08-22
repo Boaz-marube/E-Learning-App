@@ -11,6 +11,8 @@ import courseRoutes from "./courseRoutes";
 import enrollmentRoutes from "./enrollmentRoutes";
 import lessonRoutes from "./lessonRoutes";
 import progressRoutes from "./progressRoutes";
+import quizRoutes from "./quizRoutes";
+import quizAttemptRoutes from "./quizAttemptRoutes";
 
 export const registerRoutes = (app: Express): void => {
   app.use("/api/auth", authRoutes);
@@ -25,6 +27,8 @@ export const registerRoutes = (app: Express): void => {
   app.use("/api/enrollments", enrollmentRoutes);
   app.use("/api/lessons", lessonRoutes);
   app.use("/api/progress", progressRoutes);
+  app.use("/api/quizzes", quizRoutes);
+  app.use("/api/quiz-attempts", quizAttemptRoutes);
 
   // Health check
   app.get("/health", (_, res) => {
