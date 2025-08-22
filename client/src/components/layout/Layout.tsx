@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import Header from './Header';
+import React, { type ReactNode } from 'react';
+import Navbar from './navbar';
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,7 +8,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Navbar />
       <main>{children}</main>
     </div>
   );
