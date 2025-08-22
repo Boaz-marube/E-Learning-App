@@ -322,4 +322,77 @@ export interface User {
     title: string;
     duration: number;
   }
+
+  export interface Lesson {
+    _id: string;
+    courseId: string;
+    title: string;
+    description?: string;
+    videoUrl?: string;
+    duration: number; // in seconds
+    order: number;
+    isPreview: boolean;
+    materials?: {
+      title: string;
+      fileUrl: string;
+      fileType: string;
+    }[];
+    createdAt: Date;
+    updatedAt: Date;
+  }
+
+  export interface LessonProgress {
+    lessonId: string;
+    isCompleted: boolean;
+    timeWatched: number; // in seconds
+    lastPosition: number; // video position in seconds
+    completedAt?: Date;
+  }
+
+  export interface CourseProgress {
+    courseId: string;
+    userId: string;
+    currentLessonId?: string;
+    completedLessons: string[];
+    lessonsProgress: LessonProgress[];
+    totalTimeSpent: number; // in minutes
+    progressPercentage: number;
+    lastAccessed: Date;
+    isCompleted: boolean;
+    completedAt?: Date;
+  }
+
+  export interface LessonAccessRequest {
+    courseId: string;
+    lessonId: string;
+  }
+
+  export interface ProgressUpdateRequest {
+    lessonId: string;
+    timeWatched: number;
+    currentPosition: number;
+    isCompleted?: boolean;
+  }
+
+  export interface LessonWithAccess extends Lesson {
+    isAccessible: boolean;
+    userProgress?: {
+      isCompleted: boolean;
+      timeWatched: number;
+      lastPosition: number;
+    };
+    nextLessonId?: string;
+    previousLessonId?: string;
+  }
+
+  export interface CourseWithLessons {
+    courseId: string;
+    courseTitle: string;
+    totalLessons: number;
+    completedLessons: number;
+    progressPercentage: number;
+    currentLessonId?: string;
+    lessons: LessonWithAccess[];
+    canAccessNext: boolean;
+  }
   

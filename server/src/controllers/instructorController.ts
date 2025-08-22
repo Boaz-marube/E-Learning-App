@@ -4,6 +4,7 @@ import CourseModel from '../models/courseModel';
 import EnrollmentModel from '../models/enrollmentModel';
 import ProgressModel from '../models/progressModel';
 import UserModel from '../models/userModel';
+import LessonModel from '../models/lessonModel';
 import { 
   ApiResponse, 
   InstructorDashboardStats, 
@@ -604,6 +605,202 @@ export const getCourse = async (
         enrollmentCount: course.enrollmentCount,
         rating: course.rating
       }
+    });
+
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+// Create lesson for course
+export const createLesson = async (
+  req: Request<{ courseId: string }>, 
+  res: Response<ApiResponse>, 
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      return next(new ErrorHandler('Authentication required', 401));
+    }
+
+    const { courseId } = req.params;
+    const { title, description, videoUrl, duration, order, isPreview, materials } = req.body;
+
+    if (!Types.ObjectId.isValid(courseId)) {
+      return next(new ErrorHandler('Invalid course ID', 400));
+    }
+
+    // Verify course ownership
+    const course = await CourseModel.findOne({ 
+      _id: courseId, 
+      instructor: req.user._id 
+    });
+
+    if (!course) {
+      return next(new ErrorHandler('Course not found or unauthorized', 404));
+    }
+
+    if (!title || !duration || !order) {
+      return next(new ErrorHandler('Title, duration, and order are required', 400));
+    }
+
+    const lesson = await LessonModel.create({
+      courseId,
+      title,
+      description: description || '',
+      videoUrl: videoUrl || '',
+      duration,
+      order,
+      isPreview: isPreview || false,
+      materials: materials || []
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Lesson created successfully',
+      data: {
+        _id: (lesson._id as Types.ObjectId).toString(),
+        title: lesson.title,
+        order: lesson.order
+      }
+    });
+
+  } catch (error: any) {
+    if (error.code === 11000) {
+      return next(new ErrorHandler('Lesson order already exists for this course', 400));
+    }
+    next(error);
+  }
+};
+
+// Get course lessons (instructor)
+export const getCourseLessonsForInstructor = async (
+  req: Request<{ courseId: string }>, 
+  res: Response<ApiResponse>, 
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      return next(new ErrorHandler('Authentication required', 401));
+    }
+
+    const { courseId } = req.params;
+
+    if (!Types.ObjectId.isValid(courseId)) {
+      return next(new ErrorHandler('Invalid course ID', 400));
+    }
+
+    // Verify course ownership
+    const course = await CourseModel.findOne({ 
+      _id: courseId, 
+      instructor: req.user._id 
+    });
+
+    if (!course) {
+      return next(new ErrorHandler('Course not found or unauthorized', 404));
+    }
+
+    const lessons = await LessonModel.find({ courseId })
+      .sort({ order: 1 })
+      .select('title description duration order isPreview createdAt');
+
+    res.status(200).json({
+      success: true,
+      message: 'Course lessons retrieved successfully',
+      data: lessons
+    });
+
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+// Update lesson
+export const updateLesson = async (
+  req: Request<{ courseId: string; lessonId: string }>, 
+  res: Response<ApiResponse>, 
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      return next(new ErrorHandler('Authentication required', 401));
+    }
+
+    const { courseId, lessonId } = req.params;
+
+    if (!Types.ObjectId.isValid(courseId) || !Types.ObjectId.isValid(lessonId)) {
+      return next(new ErrorHandler('Invalid course or lesson ID', 400));
+    }
+
+    // Verify course ownership
+    const course = await CourseModel.findOne({ 
+      _id: courseId, 
+      instructor: req.user._id 
+    });
+
+    if (!course) {
+      return next(new ErrorHandler('Course not found or unauthorized', 404));
+    }
+
+    const lesson = await LessonModel.findOneAndUpdate(
+      { _id: lessonId, courseId },
+      { ...req.body },
+      { new: true }
+    );
+
+    if (!lesson) {
+      return next(new ErrorHandler('Lesson not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Lesson updated successfully'
+    });
+
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+// Delete lesson
+export const deleteLesson = async (
+  req: Request<{ courseId: string; lessonId: string }>, 
+  res: Response<ApiResponse>, 
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      return next(new ErrorHandler('Authentication required', 401));
+    }
+
+    const { courseId, lessonId } = req.params;
+
+    if (!Types.ObjectId.isValid(courseId) || !Types.ObjectId.isValid(lessonId)) {
+      return next(new ErrorHandler('Invalid course or lesson ID', 400));
+    }
+
+    // Verify course ownership
+    const course = await CourseModel.findOne({ 
+      _id: courseId, 
+      instructor: req.user._id 
+    });
+
+    if (!course) {
+      return next(new ErrorHandler('Course not found or unauthorized', 404));
+    }
+
+    const lesson = await LessonModel.findOneAndDelete({ 
+      _id: lessonId, 
+      courseId 
+    });
+
+    if (!lesson) {
+      return next(new ErrorHandler('Lesson not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Lesson deleted successfully'
     });
 
   } catch (error: any) {
