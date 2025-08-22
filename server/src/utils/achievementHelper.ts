@@ -79,4 +79,75 @@ export const createCourseCompletionAchievement = async (
   }
 };
 
-export default { createCourseCompletionAchievement };
+// Create achievement when instructor creates first course
+export const createInstructorAchievements = async (
+  instructorId: Types.ObjectId,
+  eventType: 'first_course' | 'student_milestone' | 'top_instructor',
+  courseTitle?: string,
+  studentCount?: number
+) => {
+  try {
+    let achievement;
+
+    switch (eventType) {
+      case 'first_course':
+        const firstCourseExists = await AchievementModel.findOne({
+          userId: instructorId,
+          type: 'course_creator'
+        });
+
+        if (!firstCourseExists) {
+          achievement = await AchievementModel.create({
+            userId: instructorId,
+            type: 'course_creator',
+            title: 'Course Creator',
+            description: 'Created your first course on the platform',
+            badgeUrl: 'https://res.cloudinary.com/demo/image/upload/course_creator_badge.png'
+          });
+        }
+        break;
+
+      case 'student_milestone':
+        if (studentCount && studentCount >= 100) {
+          const milestoneExists = await AchievementModel.findOne({
+            userId: instructorId,
+            type: 'student_milestone'
+          });
+
+          if (!milestoneExists) {
+            achievement = await AchievementModel.create({
+              userId: instructorId,
+              type: 'student_milestone',
+              title: '100 Students',
+              description: 'Reached 100 total student enrollments',
+              badgeUrl: 'https://res.cloudinary.com/demo/image/upload/100_students_badge.png'
+            });
+          }
+        }
+        break;
+
+      case 'top_instructor':
+        const topInstructorExists = await AchievementModel.findOne({
+          userId: instructorId,
+          type: 'top_instructor'
+        });
+
+        if (!topInstructorExists) {
+          achievement = await AchievementModel.create({
+            userId: instructorId,
+            type: 'top_instructor',
+            title: 'Top Instructor',
+            description: 'Achieved top instructor status with excellent ratings',
+            badgeUrl: 'https://res.cloudinary.com/demo/image/upload/top_instructor_badge.png'
+          });
+        }
+        break;
+    }
+
+    return achievement;
+  } catch (error) {
+    console.error('Error creating instructor achievements:', error);
+  }
+};
+
+export default { createCourseCompletionAchievement, createInstructorAchievements };

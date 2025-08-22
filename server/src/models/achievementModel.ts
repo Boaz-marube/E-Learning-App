@@ -18,7 +18,7 @@ const achievementSchema = new Schema<IAchievement>({
   },
   type: {
     type: String,
-    enum: ['course_completion', 'quiz_master', 'streak', 'first_course', 'fast_learner'],
+    enum: ['course_completion', 'quiz_master', 'streak', 'first_course', 'fast_learner', 'course_creator', 'top_instructor', 'student_milestone'],
     required: true
   },
   title: {
