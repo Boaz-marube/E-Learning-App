@@ -317,6 +317,17 @@ export interface User {
     token?: string;
   }
 
+  export interface AuthContextType {
+    user: User | null;
+    token: string | null;
+    login: (email: string, password: string) => Promise<void>;
+    // Fix: Change role parameter to UserRole enum
+    signup: (name: string, email: string, password: string, role: UserRole) => Promise<void>;
+    logout: () => void;
+    loading: boolean;
+  }
+  
+
   export interface DemoLesson {
     videoUrl: string;
     title: string;
