@@ -4,6 +4,7 @@ import CourseModel from '../models/courseModel';
 import TestimonialModel from '../models/testimonialModel';
 import EnrollmentModel from '../models/enrollmentModel';
 import NotificationModel from '../models/notificationModel';
+import ContentModel from '../models/contentModel';
 import { UserRole } from '../../../types/shared';
 import { config } from '../config/config';
 
@@ -201,6 +202,42 @@ export const seedDatabase = async () => {
       }
     ]);
 
+    // Create sample content
+    await ContentModel.insertMany([
+      {
+        title: 'Course Introduction PDF',
+        description: 'Welcome document for new students',
+        fileType: 'pdf',
+        fileUrl: 'https://res.cloudinary.com/demo/image/upload/sample_pdf.pdf',
+        fileName: 'course_intro.pdf',
+        fileSize: 2048000, // 2MB
+        uploadedBy: instructor1._id,
+        courseId: courses[0]._id,
+        isPublic: true
+      },
+      {
+        title: 'JavaScript Cheat Sheet',
+        description: 'Quick reference for JavaScript syntax',
+        fileType: 'image',
+        fileUrl: 'https://res.cloudinary.com/demo/image/upload/sample_cheatsheet.jpg',
+        fileName: 'js_cheatsheet.jpg',
+        fileSize: 1024000, // 1MB
+        uploadedBy: instructor1._id,
+        courseId: courses[2]._id,
+        isPublic: true
+      },
+      {
+        title: 'Private Notes',
+        description: 'Personal study notes',
+        fileType: 'document',
+        fileUrl: 'https://res.cloudinary.com/demo/raw/upload/sample_notes.docx',
+        fileName: 'my_notes.docx',
+        fileSize: 512000, // 512KB
+        uploadedBy: student1._id,
+        isPublic: false
+      }
+    ]);
+
     console.log('✅ Database seeded successfully!');
     console.log('📊 Sample data created:');
     console.log('- 2 Instructors');
@@ -208,6 +245,8 @@ export const seedDatabase = async () => {
     console.log('- 4 Courses (3 featured)');
     console.log('- 4 Testimonials');
     console.log('- 3 Enrollments');
+    console.log('- 3 Notifications');
+    console.log('- 3 Content Items');
 
   } catch (error) {
     console.error('❌ Seeding failed:', error);
