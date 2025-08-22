@@ -1,8 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import UserModel from '../models/userModel';
 import CourseModel from '../models/courseModel';
 import TestimonialModel from '../models/testimonialModel';
 import EnrollmentModel from '../models/enrollmentModel';
+import NotificationModel from '../models/notificationModel';
 import { UserRole } from '../../../types/shared';
 import { config } from '../config/config';
 
@@ -12,9 +13,11 @@ export const seedDatabase = async () => {
 
     // Clear existing data
     await Promise.all([
+      UserModel.deleteMany({}),
       CourseModel.deleteMany({}),
       TestimonialModel.deleteMany({}),
-      EnrollmentModel.deleteMany({})
+      EnrollmentModel.deleteMany({}),
+      NotificationModel.deleteMany({})
     ]);
 
     // Create sample instructors
@@ -166,6 +169,35 @@ export const seedDatabase = async () => {
         progress: 100,
         completedAt: new Date(),
         isActive: true
+      }
+    ]);
+// Create sample notifications
+    await NotificationModel.insertMany([
+      {
+        userId: student1._id,
+        title: 'Welcome to DirectEd!',
+        message: 'Welcome to our e-learning platform. Start exploring courses now!',
+        type: 'info',
+        isRead: false,
+        relatedType: 'general'
+      },
+      {
+        userId: student1._id,
+        title: 'Course Progress Update',
+        message: 'Great job! You have completed 75% of the React Development course.',
+        type: 'success',
+        isRead: false,
+        relatedId: (courses[0]._id as Types.ObjectId).toString(),
+        relatedType: 'course'
+      },
+      {
+        userId: student2._id,
+        title: 'New Course Available',
+        message: 'Check out the new TypeScript course by Prof. Michael Chen!',
+        type: 'info',
+        isRead: true,
+        relatedId: (courses[3]._id as Types.ObjectId).toString(),
+        relatedType: 'course'
       }
     ]);
 
