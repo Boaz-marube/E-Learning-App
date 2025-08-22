@@ -26,6 +26,11 @@ export interface User {
     price: number;
     duration: number;
     level: 'beginner' | 'intermediate' | 'advanced';
+    thumbnail?: string;
+    isFeatured: boolean;
+    isPublished: boolean;
+    enrollmentCount: number;
+    rating: number;
     createdAt: Date;
     updatedAt: Date;
   }
@@ -36,6 +41,117 @@ export interface User {
     courseId: string;
     enrolledAt: Date;
     progress: number;
+    completedAt?: Date;
+    isActive: boolean;
+  }
+
+  export interface Testimonial {
+    _id: string;
+    name: string;
+    role: 'student' | 'instructor';
+    message: string;
+    rating: number;
+    avatar?: string;
+    courseTitle?: string;
+    isActive: boolean;
+    createdAt: Date;
+  }
+
+  export interface PlatformStats {
+    totalCourses: number;
+    totalStudents: number;
+    totalInstructors: number;
+    totalEnrollments: number;
+  }
+
+  export interface Notification {
+    _id: string;
+    userId: string;
+    title: string;
+    message: string;
+    type: 'info' | 'success' | 'warning' | 'error';
+    isRead: boolean;
+    relatedId?: string;
+    relatedType?: 'course' | 'enrollment' | 'quiz' | 'general';
+    createdAt: Date;
+  }
+
+  export interface SearchQuery {
+    query?: string;
+    level?: 'beginner' | 'intermediate' | 'advanced';
+    minPrice?: number;
+    maxPrice?: number;
+    instructor?: string;
+    page?: number;
+    limit?: number;
+  }
+
+  export interface SearchResults {
+    courses: Course[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  }
+
+  export interface Content {
+    _id: string;
+    title: string;
+    description?: string;
+    fileType: 'video' | 'document' | 'image' | 'pdf';
+    fileUrl: string;
+    fileName: string;
+    fileSize: number;
+    uploadedBy: string;
+    courseId?: string;
+    isPublic: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  }
+
+  export interface UploadResponse {
+    success: boolean;
+    message: string;
+    content?: Content;
+  }
+
+  export interface Progress {
+    _id: string;
+    userId: string;
+    courseId: string;
+    completedLessons: string[];
+    currentLesson?: string;
+    progressPercentage: number;
+    timeSpent: number; // in minutes
+    lastAccessed: Date;
+    isCompleted: boolean;
+    completedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+  }
+
+  export interface Achievement {
+    _id: string;
+    userId: string;
+    courseId?: string;
+    type: 'course_completion' | 'quiz_master' | 'streak' | 'first_course' | 'fast_learner';
+    title: string;
+    description: string;
+    badgeUrl?: string;
+    earnedAt: Date;
+  }
+
+  export interface DashboardStats {
+    totalEnrolledCourses: number;
+    coursesInProgress: number;
+    completedCourses: number;
+    totalTimeSpent: number;
+    overallProgress: number;
+    recentAchievements: Achievement[];
+    recentActivity: {
+      courseTitle: string;
+      lastAccessed: Date;
+      progressPercentage: number;
+    }[];
   }
   
   export interface ApiResponse<T = any> {
@@ -50,3 +166,10 @@ export interface User {
     user?: User;
     token?: string;
   }
+
+  export interface DemoLesson {
+    videoUrl: string;
+    title: string;
+    duration: number;
+  }
+  

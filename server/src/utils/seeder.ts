@@ -278,6 +278,7 @@ export const seedDatabase = async () => {
 
     // Create sample achievements
     await AchievementModel.insertMany([
+      // Student achievements
       {
         userId: student1._id,
         courseId: courses[2]._id,
@@ -302,6 +303,31 @@ export const seedDatabase = async () => {
         description: 'Learned for 7 consecutive days',
         badgeUrl: 'https://res.cloudinary.com/demo/image/upload/streak_badge.png',
         earnedAt: new Date(Date.now() - 12 * 60 * 60 * 1000)
+      },
+      // Instructor achievements
+      {
+        userId: instructor1._id,
+        type: 'first_course',
+        title: 'Course Creator',
+        description: 'Created your first course on the platform',
+        badgeUrl: 'https://res.cloudinary.com/demo/image/upload/course_creator_badge.png',
+        earnedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      },
+      {
+        userId: instructor1._id,
+        type: 'streak',
+        title: '100 Students',
+        description: 'Reached 100 total student enrollments',
+        badgeUrl: 'https://res.cloudinary.com/demo/image/upload/100_students_badge.png',
+        earnedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      },
+      {
+        userId: instructor2._id,
+        type: 'first_course',
+        title: 'Course Creator',
+        description: 'Created your first course on the platform',
+        badgeUrl: 'https://res.cloudinary.com/demo/image/upload/course_creator_badge.png',
+        earnedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000)
       }
     ]);
 
@@ -315,7 +341,7 @@ export const seedDatabase = async () => {
     console.log('- 3 Notifications');
     console.log('- 3 Content Items');
     console.log('- 3 Progress Records');
-    console.log('- 3 Achievements');
+    console.log('- 6 Achievements (3 student + 3 instructor)');
 
   } catch (error) {
     console.error('❌ Seeding failed:', error);
