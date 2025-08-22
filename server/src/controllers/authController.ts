@@ -3,6 +3,9 @@ import UserModel from '../models/userModel';
 import { generateToken } from '../utils/jwt';
 import { ApiResponse, AuthResponse, UserRole } from '../../../types/shared';
 import ErrorHandler from '../utils/errorHandler';
+import CourseModel from '../models/courseModel';
+import EnrollmentModel from '../models/enrollmentModel';
+import { Course } from '../../../types/shared';
 import { Types } from 'mongoose';
 
 interface SignupRequest {
@@ -109,6 +112,83 @@ export const resetPassword = async (req: Request<{}, ApiResponse, { email: strin
       success: true,
       message: 'Password reset instructions sent to your email'
     });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+// Get user's courses (enrolled for students, created for instructors)
+export const getUserCourses = async (
+  req: Request, 
+  res: Response<ApiResponse<Course[]>>, 
+  next: NextFunction
+) => {
+  try {
+    if (!req.user) {
+      return next(new ErrorHandler('Authentication required', 401));
+    }
+
+    let courses;
+
+    if (req.user.role === UserRole.STUDENT) {
+      // For students: Get enrolled courses
+      const enrollments = await EnrollmentModel.find({ 
+        userId: req.user._id, 
+        isActive: true 
+      }).populate({
+        path: 'courseId',
+        populate: {
+          path: 'instructor',
+          select: 'name email'
+        }
+      });
+
+      courses = enrollments
+        .filter(enrollment => enrollment.courseId) // Filter out null courseId
+        .map(enrollment => enrollment.courseId);
+
+    } else if (req.user.role === UserRole.INSTRUCTOR) {
+      // For instructors: Get created courses
+      courses = await CourseModel.find({ 
+        instructor: req.user._id 
+      }).populate('instructor', 'name email');
+
+    } else {
+      return next(new ErrorHandler('Invalid user role', 403));
+    }
+
+    if (!courses || courses.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: req.user.role === UserRole.STUDENT ? 'No enrolled courses found' : 'No created courses found',
+        data: []
+      });
+    }
+
+    // Transform to shared type format
+    const courseData: Course[] = courses.map((course: any) => ({
+      _id: (course._id as Types.ObjectId).toString(),
+      title: course.title,
+      description: course.description,
+      instructor: (course.instructor._id as Types.ObjectId).toString(),
+      price: course.price,
+      duration: course.duration,
+      level: course.level,
+      thumbnail: course.thumbnail,
+      isFeatured: course.isFeatured,
+      isPublished: course.isPublished,
+      enrollmentCount: course.enrollmentCount,
+      rating: course.rating,
+      createdAt: course.createdAt,
+      updatedAt: course.updatedAt
+    }));
+
+    res.status(200).json({
+      success: true,
+      message: `${req.user.role === UserRole.STUDENT ? 'Enrolled' : 'Created'} courses retrieved successfully`,
+      data: courseData
+    });
+
   } catch (error: any) {
     next(error);
   }
