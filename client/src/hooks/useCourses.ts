@@ -1,6 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import { api } from '../utils/api';
 import type { Course, CourseFilters } from '../types/filters';
 
+// Fallback mock data
 const mockCourses: Course[] = [
   {
     id: "1",
@@ -83,75 +85,75 @@ const mockCourses: Course[] = [
 ];
 
 export const useCourses = (filters: CourseFilters) => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [totalCourses, setTotalCourses] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate API loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const filteredAndSortedCourses = useMemo(() => {
-    let filtered = mockCourses.filter((course) => {
-      const matchesSearch =
-        course.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        course.description.toLowerCase().includes(filters.search.toLowerCase()) ||
-        course.instructor.toLowerCase().includes(filters.search.toLowerCase());
-
-      const matchesCategory = filters.category === "All" || course.category === filters.category;
-      const matchesLevel = filters.level === "All" || course.level === filters.level;
-
-      let matchesDuration = true;
-      if (filters.duration !== "All") {
-        const weeks = parseInt(course.duration);
-        switch (filters.duration) {
-          case "1-4 weeks":
-            matchesDuration = weeks <= 4;
-            break;
-          case "5-8 weeks":
-            matchesDuration = weeks >= 5 && weeks <= 8;
-            break;
-          case "9-12 weeks":
-            matchesDuration = weeks >= 9 && weeks <= 12;
-            break;
-          case "13+ weeks":
-            matchesDuration = weeks >= 13;
-            break;
+    const fetchCourses = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        if (filters.search.trim()) {
+          // Use search API if there's a search query
+          const params = new URLSearchParams({ q: filters.search });
+          if (filters.category !== 'All') params.append('category', filters.category);
+          if (filters.level !== 'All') params.append('level', filters.level.toLowerCase());
+          
+          const response = await api.get(`/api/search/courses?${params}`);
+          if (response.data.success) {
+            const apiCourses = response.data.data.map((course: any) => ({
+              id: course._id,
+              title: course.title,
+              description: course.description,
+              instructor: course.instructor,
+              duration: `${course.duration} hours`,
+              students: course.enrollmentCount,
+              rating: course.rating,
+              level: course.level.charAt(0).toUpperCase() + course.level.slice(1),
+              category: course.category,
+              thumbnail: course.thumbnail,
+              price: `$${course.price}`
+            }));
+            setCourses(apiCourses);
+            setTotalCourses(response.data.pagination?.total || apiCourses.length);
+          }
+        } else {
+          // Use featured courses API for no search
+          const response = await api.get('/api/courses/featured');
+          if (response.data.success) {
+            const apiCourses = response.data.data.map((course: any) => ({
+              id: course._id,
+              title: course.title,
+              description: course.description,
+              instructor: course.instructor,
+              duration: `${course.duration} hours`,
+              students: course.enrollmentCount,
+              rating: course.rating,
+              level: course.level.charAt(0).toUpperCase() + course.level.slice(1),
+              category: course.category,
+              thumbnail: course.thumbnail,
+              price: `$${course.price}`
+            }));
+            setCourses(apiCourses);
+            setTotalCourses(apiCourses.length);
+          }
         }
+      } catch (err: any) {
+        // Fallback to mock data on error
+        console.warn('API failed, using mock data:', err);
+        setCourses(mockCourses);
+        setTotalCourses(mockCourses.length);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      return matchesSearch && matchesCategory && matchesLevel && matchesDuration;
-    });
+    const debounceTimer = setTimeout(fetchCourses, 2000);
+    return () => clearTimeout(debounceTimer);
+  }, [filters.search, filters.category, filters.level]);
 
-    // Sort courses
-    filtered.sort((a, b) => {
-      switch (filters.sortBy) {
-        case "popular":
-          return b.students - a.students;
-        case "rating":
-          return b.rating - a.rating;
-        case "price-low":
-          return parseInt(a.price.replace("$", "")) - parseInt(b.price.replace("$", ""));
-        case "price-high":
-          return parseInt(b.price.replace("$", "")) - parseInt(a.price.replace("$", ""));
-        case "newest":
-          return 0; // Would sort by creation date in real app
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
-  }, [filters]);
-
-  return {
-    courses: filteredAndSortedCourses,
-    totalCourses: mockCourses.length,
-    loading,
-    error
-  };
+  return { courses, totalCourses, loading, error };
 };

@@ -23,6 +23,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import VerifyCode from './pages/VerifyCode';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Search from './pages/Search';
 
 function App() {
   return (
@@ -57,6 +58,10 @@ function App() {
               <Route 
                 path="/courses" 
                 element={<Courses />} 
+              />
+              <Route 
+                path="/search" 
+                element={<Search />} 
               />
               <Route 
                 path="/courses/:id" 

@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { uploadImage } from '../utils/uploadHelpers';
 
 interface CourseFormData {
   title: string;
@@ -33,6 +34,7 @@ const CreateCourse: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTag, setNewTag] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   
   const [formData, setFormData] = useState<CourseFormData>({
     title: '',
@@ -107,6 +109,22 @@ const CreateCourse: React.FC = () => {
 
   const removeTag = (tagToRemove: string) => {
     handleInputChange('tags', formData.tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const result = await uploadImage(file, `${formData.title} Thumbnail`, 'Course thumbnail image');
+      handleInputChange('thumbnail', result.url);
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const nextStep = () => {
@@ -269,8 +287,26 @@ const CreateCourse: React.FC = () => {
               </label>
               <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400 mb-2">Drop your image here, or browse</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-2">Upload course thumbnail</p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">Recommended: 1200x675px, PNG or JPG</p>
+                
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="thumbnail-upload"
+                  disabled={isUploading}
+                />
+                <label
+                  htmlFor="thumbnail-upload"
+                  className={`mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-colors ${
+                    isUploading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {isUploading ? 'Uploading...' : 'Choose Image'}
+                </label>
+                
                 <input
                   type="url"
                   value={formData.thumbnail}
@@ -278,6 +314,16 @@ const CreateCourse: React.FC = () => {
                   className="mt-4 w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 dark:text-white"
                   placeholder="Or paste image URL"
                 />
+                
+                {formData.thumbnail && (
+                  <div className="mt-4">
+                    <img
+                      src={formData.thumbnail}
+                      alt="Course thumbnail preview"
+                      className="max-w-full h-32 object-cover rounded-lg mx-auto"
+                    />
+                  </div>
+                )}
               </div>
             </div>
 

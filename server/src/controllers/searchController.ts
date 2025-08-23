@@ -1,85 +1,66 @@
 import { Request, Response, NextFunction } from 'express';
-import { Types } from 'mongoose';
 import CourseModel from '../models/courseModel';
-import { ApiResponse, SearchQuery, SearchResults, Course } from '../../../types';
+import { ApiResponse, Course } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
+import { Types } from 'mongoose';
 
-// Search courses with filters
+interface SearchQuery {
+  q?: string;
+  category?: string;
+  level?: string;
+  page?: string;
+  limit?: string;
+}
+
 export const searchCourses = async (
-  req: Request<{}, ApiResponse<SearchResults>, {}, SearchQuery>, 
-  res: Response<ApiResponse<SearchResults>>, 
+  req: Request<{}, ApiResponse<Course[]>, {}, SearchQuery>,
+  res: Response<ApiResponse<Course[]>>,
   next: NextFunction
 ) => {
   try {
-    const { 
-      query = '', 
-      level, 
-      minPrice, 
-      maxPrice, 
-      instructor, 
-      page = 1, 
-      limit = 10 
-    } = req.query;
+    const { q, category, level, page = '1', limit = '12' } = req.query;
+
+    if (!q || q.trim().length === 0) {
+      return next(new ErrorHandler('Search query is required', 400));
+    }
+
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.min(50, Math.max(1, Number(limit)));
+    const skip = (pageNum - 1) * limitNum;
 
     // Build search filter
     const searchFilter: any = {
-      isPublished: true
+      isPublished: true,
+      $or: [
+        { title: { $regex: q, $options: 'i' } },
+        { description: { $regex: q, $options: 'i' } },
+        { tags: { $in: [new RegExp(q, 'i')] } }
+      ]
     };
 
-    // Text search
-    if (query) {
-      searchFilter.$or = [
-        { title: { $regex: query, $options: 'i' } },
-        { description: { $regex: query, $options: 'i' } }
-      ];
+    // Add additional filters
+    if (category) {
+      searchFilter.category = category;
     }
-
-    // Level filter
     if (level) {
       searchFilter.level = level;
     }
 
-    // Price range filter
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      searchFilter.price = {};
-      if (minPrice !== undefined) {
-        searchFilter.price.$gte = Number(minPrice);
-      }
-      if (maxPrice !== undefined) {
-        searchFilter.price.$lte = Number(maxPrice);
-      }
-    }
+    // Execute search
+    const courses = await CourseModel.find(searchFilter)
+      .populate('instructor', 'name email')
+      .sort({ rating: -1, enrollmentCount: -1 })
+      .skip(skip)
+      .limit(limitNum);
 
-    // Instructor filter
-    if (instructor) {
-      searchFilter.instructor = instructor;
-    }
-
-    // Pagination
-    const pageNum = Math.max(1, Number(page));
-    const limitNum = Math.min(50, Math.max(1, Number(limit))); // Max 50 results per page
-    const skip = (pageNum - 1) * limitNum;
-
-    // Execute search with pagination
-    const [courses, totalCount] = await Promise.all([
-      CourseModel.find(searchFilter)
-        .populate('instructor', 'name email')
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limitNum),
-      CourseModel.countDocuments(searchFilter)
-    ]);
-
-    if (!courses || courses.length === 0) {
-      return next(new ErrorHandler('No courses found matching your criteria', 404));
-    }
+    const total = await CourseModel.countDocuments(searchFilter);
 
     // Transform to shared type format
     const courseData: Course[] = courses.map(course => ({
       _id: (course._id as Types.ObjectId).toString(),
       title: course.title,
       description: course.description,
-      instructor: (course.instructor as Types.ObjectId).toString(),
+      instructor: (course.instructor._id as Types.ObjectId).toString(),
       category: course.category || 'General',
       price: course.price,
       duration: course.duration,
@@ -93,52 +74,16 @@ export const searchCourses = async (
       updatedAt: course.updatedAt
     }));
 
-    const totalPages = Math.ceil(totalCount / limitNum);
-
-    const searchResults: SearchResults = {
-      courses: courseData,
-      totalCount,
-      currentPage: pageNum,
-      totalPages
-    };
-
     res.status(200).json({
       success: true,
-      message: `Found ${totalCount} courses`,
-      data: searchResults
-    });
-
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-// Get search suggestions (autocomplete)
-export const getSearchSuggestions = async (
-  req: Request<{}, ApiResponse<string[]>, {}, { q: string }>, 
-  res: Response<ApiResponse<string[]>>, 
-  next: NextFunction
-) => {
-  try {
-    const { q } = req.query;
-
-    if (!q || q.length < 2) {
-      return next(new ErrorHandler('Query must be at least 2 characters long', 400));
-    }
-
-    const suggestions = await CourseModel.find({
-      isPublished: true,
-      title: { $regex: q, $options: 'i' }
-    })
-    .select('title')
-    .limit(5);
-
-    const suggestionTitles = suggestions.map(course => course.title);
-
-    res.status(200).json({
-      success: true,
-      message: 'Search suggestions retrieved successfully',
-      data: suggestionTitles
+      message: `Found ${total} courses for "${q}"`,
+      data: courseData,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum)
+      }
     });
 
   } catch (error: any) {
