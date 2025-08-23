@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { searchCourses, getSearchSuggestions } from '../controllers/searchController';
+import { searchCourses } from '../controllers/searchController';
 
 const router = Router();
 
-// Public search routes
+// Search courses
 router.get('/courses', searchCourses);
-router.get('/suggestions', getSearchSuggestions);
 
 export default router;

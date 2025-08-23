@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 interface CourseCardProps {
   id?: string;
@@ -25,10 +26,29 @@ const CourseCard: React.FC<CourseCardProps> = ({
   image
 }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleEnrollClick = () => {
+    if (!user) {
+      // Redirect to login if not authenticated
+      navigate('/login', { state: { from: `/courses/${id}` } });
+    } else {
+      // Go to course detail page for enrollment
+      navigate(`/courses/${id}`);
+    }
+  };
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
       <div className="relative">
-        <img src={image} alt={title} className="w-full h-48 object-cover" />
+        <img 
+          src={image} 
+          alt={title} 
+          className="w-full h-48 object-cover bg-gray-200 dark:bg-gray-700" 
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop';
+          }}
+          loading="lazy"
+        />
         <span className="absolute top-4 right-4 bg-gray-600 text-white px-3 py-1 rounded-full text-sm">
           {level}
         </span>
@@ -67,12 +87,13 @@ const CourseCard: React.FC<CourseCardProps> = ({
             View Details
           </button>
           <button
+            onClick={handleEnrollClick}
             className="flex-1 text-white py-3 rounded-md font-medium transition-colors"
             style={{ backgroundColor: "#006d3a" }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#005a35")}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#006d3a")}
           >
-            Enroll Now
+            {user ? 'Enroll Now' : 'Login to Enroll'}
           </button>
         </div>
       </div>

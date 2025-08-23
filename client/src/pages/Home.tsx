@@ -117,7 +117,7 @@ const Home: React.FC = () => {
       <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-12 text-center transition-colors duration-300">
-            What our Students Say About their Experience
+            What our Instructors Say About their Experience
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -132,12 +132,15 @@ const Home: React.FC = () => {
 
                 <div className="flex items-start mb-4">
                   <img
-                    src="/assets/student1.jpg"
+                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face"
                     alt="Hannah Schmitt"
                     className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover mr-3 md:mr-4 flex-shrink-0"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://ui-avatars.com/api/?name=Hannah+Schmitt&background=00693F&color=fff&size=100';
+                    }}
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg transition-colors duration-300">Hannah Schmitt</h4>
+                    <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg transition-colors duration-300">Hannah Homari</h4>
                     <p className="text-gray-600 dark:text-gray-300 text-xs md:text-sm transition-colors duration-300">Lead Designer</p>
                   </div>
                 </div>
@@ -161,12 +164,12 @@ const Home: React.FC = () => {
 
                 <div className="flex items-start mb-4">
                   <img
-                    src="/assets/student2.jpg"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
                     alt="John Doe"
                     className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover mr-3 md:mr-4 flex-shrink-0"
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg transition-colors duration-300">John Doe</h4>
+                    <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg transition-colors duration-300">John Kipruto</h4>
                     <p className="text-gray-600 dark:text-gray-300 text-xs md:text-sm transition-colors duration-300">Software Developer</p>
                   </div>
                 </div>
@@ -190,12 +193,12 @@ const Home: React.FC = () => {
 
                 <div className="flex items-start mb-4">
                   <img
-                    src="/assets/student1.jpg"
+                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
                     alt="Sarah Johnson"
                     className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover mr-3 md:mr-4 flex-shrink-0"
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg transition-colors duration-300">Sarah Johnson</h4>
+                    <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg transition-colors duration-300">Sarah Fardosa</h4>
                     <p className="text-gray-600 dark:text-gray-300 text-xs md:text-sm transition-colors duration-300">Data Scientist</p>
                   </div>
                 </div>

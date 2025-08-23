@@ -69,7 +69,7 @@ export const seedDatabase = async () => {
         price: 99.99,
         duration: 40,
         level: 'intermediate',
-        thumbnail: 'https://via.placeholder.com/300x200?text=React+Course',
+        thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop',
         tags: ['React', 'JavaScript', 'Frontend', 'Hooks'],
         isFeatured: true,
         isPublished: true,
@@ -84,7 +84,7 @@ export const seedDatabase = async () => {
         price: 89.99,
         duration: 35,
         level: 'advanced',
-        thumbnail: 'https://via.placeholder.com/300x200?text=Node.js+Course',
+        thumbnail: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=250&fit=crop',
         tags: ['Node.js', 'Express', 'MongoDB', 'API'],
         isFeatured: true,
         isPublished: true,
@@ -99,7 +99,7 @@ export const seedDatabase = async () => {
         price: 49.99,
         duration: 25,
         level: 'beginner',
-        thumbnail: 'https://via.placeholder.com/300x200?text=JavaScript+Course',
+        thumbnail: 'https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=400&h=250&fit=crop',
         tags: ['JavaScript', 'Programming', 'Fundamentals', 'ES6'],
         isFeatured: true,
         isPublished: true,
@@ -114,7 +114,7 @@ export const seedDatabase = async () => {
         price: 79.99,
         duration: 30,
         level: 'intermediate',
-        thumbnail: 'https://via.placeholder.com/300x200?text=TypeScript+Course',
+        thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop',
         tags: ['TypeScript', 'JavaScript', 'Type Safety', 'Development'],
         isFeatured: false,
         isPublished: true,
@@ -130,7 +130,7 @@ export const seedDatabase = async () => {
         role: 'student',
         message: 'The React course completely transformed my understanding of modern web development. Highly recommended!',
         rating: 5,
-        avatar: 'https://via.placeholder.com/100x100?text=AS',
+        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
         courseTitle: 'Complete React Development',
         isActive: true
       },
@@ -139,7 +139,7 @@ export const seedDatabase = async () => {
         role: 'student',
         message: 'Excellent content and clear explanations. The Node.js course helped me land my dream job!',
         rating: 5,
-        avatar: 'https://via.placeholder.com/100x100?text=BW',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
         courseTitle: 'Node.js Backend Mastery',
         isActive: true
       },
@@ -148,7 +148,7 @@ export const seedDatabase = async () => {
         role: 'instructor',
         message: 'Teaching on this platform has been incredibly rewarding. Great community of learners!',
         rating: 5,
-        avatar: 'https://via.placeholder.com/100x100?text=SJ',
+        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face',
         isActive: true
       },
       {
@@ -156,7 +156,7 @@ export const seedDatabase = async () => {
         role: 'student',
         message: 'The JavaScript fundamentals course is perfect for beginners. Step-by-step approach works great!',
         rating: 4,
-        avatar: 'https://via.placeholder.com/100x100?text=ED',
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
         courseTitle: 'JavaScript Fundamentals',
         isActive: true
       }
