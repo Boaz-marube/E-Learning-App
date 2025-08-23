@@ -5,3 +5,4 @@ scripts/
 ../extractor2.py
 .env
 venv/
+graph/__pycache__
