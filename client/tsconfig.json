@@ -17,8 +17,7 @@
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": false,
     "noImplicitReturns": false,
-    "noImplicitThis": false,
-    "suppressImplicitAnyIndexErrors": true
+    "noImplicitThis": false
   },
   "include": ["src", "../types"]
 }
