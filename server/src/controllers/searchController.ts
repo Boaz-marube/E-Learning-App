@@ -77,13 +77,7 @@ export const searchCourses = async (
     res.status(200).json({
       success: true,
       message: `Found ${total} courses for "${q}"`,
-      data: courseData,
-      pagination: {
-        page: pageNum,
-        limit: limitNum,
-        total,
-        pages: Math.ceil(total / limitNum)
-      }
+      data: courseData
     });
 
   } catch (error: any) {
