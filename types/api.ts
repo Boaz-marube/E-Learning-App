@@ -1,4 +1,4 @@
-import { Course, CourseLevel } from './course';
+import type { Course, CourseLevel } from './course';
 
 export interface ApiResponse<T = any> {
   success: boolean;
