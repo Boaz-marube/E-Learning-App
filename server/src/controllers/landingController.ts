@@ -4,7 +4,7 @@ import CourseModel from '../models/courseModel';
 import TestimonialModel from '../models/testimonialModel';
 import EnrollmentModel from '../models/enrollmentModel';
 import UserModel from '../models/userModel';
-import { ApiResponse, Course, Testimonial, PlatformStats, UserRole } from '../../../types/shared';
+import { ApiResponse, Course, Testimonial, PlatformStats, UserRole } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Get featured courses for homepage

@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Enrollment } from '../../../types/shared';
+import { Enrollment } from '../../../types';
 
 export interface IEnrollment extends Document, Omit<Enrollment, '_id' | 'userId' | 'courseId'> {
   userId: mongoose.Types.ObjectId;

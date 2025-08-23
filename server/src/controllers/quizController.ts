@@ -11,7 +11,7 @@ import {
   QuizSubmissionRequest, 
   QuizResult, 
   QuizAttempt 
-} from '../../../types/shared';
+} from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Fetch quiz for lesson

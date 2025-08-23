@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 import ProgressModel from '../models/progressModel';
 import AchievementModel from '../models/achievementModel';
 import EnrollmentModel from '../models/enrollmentModel';
-import { ApiResponse, DashboardStats, Progress, Achievement } from '../../../types/shared';
+import { ApiResponse, DashboardStats, Progress, Achievement } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 import { createCourseCompletionAchievement } from '../utils/achievementHelper';
 

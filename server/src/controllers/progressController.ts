@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import ProgressModel from '../models/progressModel';
 import EnrollmentModel from '../models/enrollmentModel';
-import { ApiResponse, CourseProgress } from '../../../types/shared';
+import { ApiResponse, CourseProgress } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 import { createCourseCompletionAchievement } from '../utils/achievementHelper';
 

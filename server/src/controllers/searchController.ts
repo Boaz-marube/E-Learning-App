@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import CourseModel from '../models/courseModel';
-import { ApiResponse, SearchQuery, SearchResults, Course } from '../../../types/shared';
+import { ApiResponse, SearchQuery, SearchResults, Course } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Search courses with filters

@@ -11,7 +11,7 @@ import {
   CourseCreateRequest,
   CourseUpdateRequest,
   Course
-} from '../../../types/shared';
+} from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Get paginated courses with filters (Public)

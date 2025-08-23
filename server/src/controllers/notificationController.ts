@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import NotificationModel from '../models/notificationModel';
-import { ApiResponse, Notification } from '../../../types/shared';
+import { ApiResponse, Notification } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Get user notifications

@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Progress } from '../../../types/shared';
+import { Progress } from '../../../types';
 
 export interface IProgress extends Document, Omit<Progress, '_id' | 'userId' | 'courseId'> {
   userId: mongoose.Types.ObjectId;

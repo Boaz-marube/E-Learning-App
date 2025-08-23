@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 import EnrollmentModel from '../models/enrollmentModel';
 import CourseModel from '../models/courseModel';
 import ProgressModel from '../models/progressModel';
-import { ApiResponse, Enrollment } from '../../../types/shared';
+import { ApiResponse, Enrollment } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Enroll in a course

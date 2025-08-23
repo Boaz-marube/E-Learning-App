@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Achievement } from '../../../types/shared';
+import { Achievement } from '../../../types';
 
 export interface IAchievement extends Document, Omit<Achievement, '_id' | 'userId' | 'courseId'> {
   userId: mongoose.Types.ObjectId;
