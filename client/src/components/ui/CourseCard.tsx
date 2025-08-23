@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface CourseCardProps {
+  id?: string;
   title: string;
   description: string;
   instructor: string;
@@ -12,6 +14,7 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
+  id = '1',
   title,
   description,
   instructor,
@@ -21,6 +24,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   level,
   image
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
       <div className="relative">
@@ -55,14 +59,22 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </div>
         </div>
 
-        <button
-          className="w-full text-white py-3 rounded-md font-medium transition-colors"
-          style={{ backgroundColor: "#00693F" }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#005a35")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#00693F")}
-        >
-          Enroll Now
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate(`/courses/${id}`)}
+            className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-md font-medium transition-colors hover:bg-gray-50 dark:hover:bg-gray-600"
+          >
+            View Details
+          </button>
+          <button
+            className="flex-1 text-white py-3 rounded-md font-medium transition-colors"
+            style={{ backgroundColor: "#006d3a" }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#005a35")}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#006d3a")}
+          >
+            Enroll Now
+          </button>
+        </div>
       </div>
     </div>
   );
