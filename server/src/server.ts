@@ -12,7 +12,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['e-learning-app-seven.vercel.app'] 
+    ? ['https://e-learning-app-seven.vercel.app'] 
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true
 }));
@@ -20,6 +20,17 @@ app.use(cors({
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
+
+// Temporary seed route (remove in production)
+app.get('/seed', async (req, res) => {
+  try {
+    const { seedDatabase } = await import('./utils/seeder');
+    await seedDatabase();
+    res.status(200).json({ status: 'OK', message: 'Database seeded successfully' });
+  } catch (error) {
+    res.status(500).json({ status: 'ERROR', message: 'Seeding failed', error });
+  }
 });
 
 (async function startUp() {
