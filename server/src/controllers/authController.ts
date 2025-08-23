@@ -171,6 +171,7 @@ export const getUserCourses = async (
       title: course.title,
       description: course.description,
       instructor: (course.instructor._id as Types.ObjectId).toString(),
+      category: course.category || 'General',
       price: course.price,
       duration: course.duration,
       level: course.level,
