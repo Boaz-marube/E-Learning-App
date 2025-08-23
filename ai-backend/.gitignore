@@ -1,0 +1,8 @@
+/data/scripts
+data/datasets/__pycache__
+scripts/
+../extractor.py 
+../extractor2.py
+.env
+venv/
+graph/__pycache__
