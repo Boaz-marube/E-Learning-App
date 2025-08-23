@@ -263,7 +263,7 @@ const EditCourse: React.FC = () => {
                     type="number"
                     min="1"
                     value={formData.duration}
-                    onChange={(e) => handleInputChange('duration', e.target.value))
+                    onChange={(e) => handleInputChange('duration', e.target.value)}
                     className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent dark:bg-gray-800 dark:text-white ${
                       errors.duration ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                     }`}
