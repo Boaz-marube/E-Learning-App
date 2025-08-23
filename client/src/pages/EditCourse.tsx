@@ -90,7 +90,10 @@ const EditCourse: React.FC = () => {
   };
 
   const handleInputChange = (field: keyof CourseFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const processedValue = (field === 'price' || field === 'duration') && typeof value === 'string' 
+      ? Number(value) || 0 
+      : value;
+    setFormData(prev => ({ ...prev, [field]: processedValue }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
