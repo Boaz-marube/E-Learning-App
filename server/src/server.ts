@@ -12,7 +12,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com'] 
+    ? ['e-learning-app-seven.vercel.app'] 
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true
 }));
