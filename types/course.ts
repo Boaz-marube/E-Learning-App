@@ -1,5 +1,7 @@
 import { CourseLevel, SortOrder } from './common';
 
+export { CourseLevel };
+
 export interface Course {
   _id: string;
   title: string;

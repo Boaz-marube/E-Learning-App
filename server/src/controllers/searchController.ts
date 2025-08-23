@@ -80,6 +80,7 @@ export const searchCourses = async (
       title: course.title,
       description: course.description,
       instructor: (course.instructor as Types.ObjectId).toString(),
+      category: course.category || 'General',
       price: course.price,
       duration: course.duration,
       level: course.level,

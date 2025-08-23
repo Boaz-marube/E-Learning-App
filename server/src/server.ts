@@ -5,7 +5,7 @@ import { config } from "./config/config";
 import { registerRoutes } from "./routes";
 import { ErrorMiddleware } from "./middleware/errorMiddleware";
 
-const PORT = process.env.PORT || config.server.port;
+const PORT = Number(process.env.PORT) || config.server.port;
 const app: Express = express();
 
 // Middleware
@@ -41,7 +41,7 @@ app.get('/health', (req, res) => {
 
 
     // Start server
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(PORT, () => {
       console.log(`🚀 Server listening on port ${PORT}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
