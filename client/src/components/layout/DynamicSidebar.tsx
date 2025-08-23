@@ -16,7 +16,9 @@ import {
   Sun,
   Settings, 
   LogOut,
-  Search
+  Search,
+  ClipboardList,
+  Edit3
 } from "lucide-react";
 import type { MenuItem, SidebarProps, UserRole } from '../../types/sidebar';
 
@@ -66,9 +68,23 @@ const DynamicSidebar: React.FC<SidebarProps> = ({ className = "", isCollapsed = 
     },
     {
       id: 'quizzes',
-      label: 'Quizzes/Assessments',
-      icon: <FileQuestion className="w-5 h-5" />,
+      label: 'Take Quizzes',
+      icon: <ClipboardList className="w-5 h-5" />,
       path: '/quizzes',
+      roles: ['student'] as UserRole[]
+    },
+    {
+      id: 'manage-quizzes',
+      label: 'Manage Quizzes',
+      icon: <FileQuestion className="w-5 h-5" />,
+      path: '/instructor/quizzes',
+      roles: ['instructor'] as UserRole[]
+    },
+    {
+      id: 'create-quiz',
+      label: 'Create Quiz',
+      icon: <Edit3 className="w-5 h-5" />,
+      path: '/instructor/create-quiz',
       roles: ['instructor'] as UserRole[]
     },
     {
@@ -83,7 +99,8 @@ const DynamicSidebar: React.FC<SidebarProps> = ({ className = "", isCollapsed = 
       label: 'Notifications',
       icon: <Bell className="w-5 h-5" />,
       path: '/notifications',
-      roles: ['student', 'instructor'] as UserRole[]
+      roles: ['student', 'instructor'] as UserRole[],
+      badge: '3'
     },
     {
       id: 'profile',
@@ -197,7 +214,14 @@ const DynamicSidebar: React.FC<SidebarProps> = ({ className = "", isCollapsed = 
                       {item.icon}
                     </span>
                     {!isCollapsed && (
-                      <span className="font-medium text-sm">{item.label}</span>
+                      <div className="flex items-center justify-between flex-1">
+                        <span className="font-medium text-sm">{item.label}</span>
+                        {item.badge && (
+                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </Link>
                 </li>

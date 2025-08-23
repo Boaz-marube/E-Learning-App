@@ -9,6 +9,7 @@ export interface MenuItem {
   path?: string;
   roles: UserRole[];
   action?: () => void;
+  badge?: string;
 }
 
 export interface SidebarProps {

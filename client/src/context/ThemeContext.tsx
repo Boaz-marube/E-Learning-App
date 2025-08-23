@@ -15,15 +15,11 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
-
-  useEffect(() => {
-    // Get theme from localStorage or default to light
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Initialize theme from localStorage or default to light
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || savedTheme === 'light') {
-      setTheme(savedTheme);
-    }
-  }, []);
+    return (savedTheme === 'dark' || savedTheme === 'light') ? savedTheme : 'light';
+  });
 
   useEffect(() => {
     // Apply theme to document and save to localStorage
@@ -37,13 +33,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     
     // Save to localStorage
     localStorage.setItem('theme', theme);
-    
-    console.log('Theme applied:', theme, 'Has dark class:', root.classList.contains('dark'));
   }, [theme]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
-    console.log('Toggling theme from', theme, 'to', newTheme);
     setTheme(newTheme);
   };
 

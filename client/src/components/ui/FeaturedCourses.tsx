@@ -75,6 +75,7 @@ const FeaturedCourses: React.FC = () => {
           {featuredCourses.map((course) => (
             <CourseCard
               key={course.id}
+              id={course.id}
               title={course.title}
               description={course.description}
               instructor={course.instructor}
@@ -92,12 +93,12 @@ const FeaturedCourses: React.FC = () => {
           <a
             href="/courses"
             className="inline-flex items-center px-8 py-3 text-lg font-medium text-white rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            style={{ backgroundColor: "#00693F" }}
+            style={{ backgroundColor: "#006d3a" }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "#005a35";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#00693F";
+              e.currentTarget.style.backgroundColor = "#006d3a";
             }}
           >
             View All Courses
