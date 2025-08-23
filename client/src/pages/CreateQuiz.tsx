@@ -11,7 +11,8 @@ import {
   FileQuestion,
   Clock,
   Trophy,
-  Hash
+  Hash,
+  Trash2
 } from 'lucide-react';
 
 interface QuizQuestion {
