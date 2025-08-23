@@ -1,10 +1,11 @@
 import type React from "react"
 import { Link } from "react-router-dom"
+import { Mail, Phone, MapPin } from "lucide-react"
 
 const Footer: React.FC = () => {
   return (
     <footer style={{ backgroundColor: "#00693F" }} className="text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:px-72">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
           {/* DirectEd Logo and Contact Info */}
           <div className="md:col-span-1">
@@ -14,15 +15,15 @@ const Footer: React.FC = () => {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex items-center space-x-2">
-                <span>📧</span>
+                <Mail className="w-4 h-4" />
                 <span>directedbuh.com</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span>📞</span>
+                <Phone className="w-4 h-4" />
                 <span>+91 9813 23 2309</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span>📍</span>
+                <MapPin className="w-4 h-4" />
                 <span>Somewhere in the World</span>
               </div>
             </div>

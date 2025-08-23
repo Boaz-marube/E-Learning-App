@@ -17,14 +17,7 @@ const AfricaTechHero = () => {
       
 
 
-      {/* Navigation Arrow (top-left) */}
-      <div className="absolute top-6 left-6 z-20">
-        <div className="bg-white rounded-full p-2 shadow-lg">
-          <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-          </svg>
-        </div>
-      </div>
+
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">

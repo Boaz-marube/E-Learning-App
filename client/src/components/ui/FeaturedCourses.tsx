@@ -86,6 +86,23 @@ const FeaturedCourses: React.FC = () => {
             />
           ))}
         </div>
+
+        {/* View All Courses Button */}
+        <div className="flex justify-center mt-12">
+          <a
+            href="/courses"
+            className="inline-flex items-center px-8 py-3 text-lg font-medium text-white rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            style={{ backgroundColor: "#00693F" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#005a35";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#00693F";
+            }}
+          >
+            View All Courses
+          </a>
+        </div>
       </div>
     </section>
   );
