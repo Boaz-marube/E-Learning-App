@@ -6,7 +6,7 @@ export enum UserRole {
 }
 
 // Common level type
-export type CourseLevel = 'beginner' | 'intermediate' | 'advanced';
+export type CourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 // Common sort orders
 export type SortOrder = 'asc' | 'desc';
