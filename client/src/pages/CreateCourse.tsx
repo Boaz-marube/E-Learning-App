@@ -79,8 +79,8 @@ const CreateCourse: React.FC = () => {
         if (!formData.category) newErrors.category = 'Category is required';
         break;
       case 2:
-        if (formData.price < 0) newErrors.price = 'Price must be 0 or greater';
-        if (formData.duration <= 0) newErrors.duration = 'Duration must be greater than 0';
+        if (Number(formData.price) < 0) newErrors.price = 'Price must be 0 or greater';
+        if (Number(formData.duration) <= 0) newErrors.duration = 'Duration must be greater than 0';
         break;
     }
 

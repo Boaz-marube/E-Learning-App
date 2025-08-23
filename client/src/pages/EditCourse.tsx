@@ -82,8 +82,8 @@ const EditCourse: React.FC = () => {
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     if (!formData.category) newErrors.category = 'Category is required';
-    if (formData.price < 0) newErrors.price = 'Price must be 0 or greater';
-    if (formData.duration <= 0) newErrors.duration = 'Duration must be greater than 0';
+    if (Number(formData.price) < 0) newErrors.price = 'Price must be 0 or greater';
+    if (Number(formData.duration) <= 0) newErrors.duration = 'Duration must be greater than 0';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
