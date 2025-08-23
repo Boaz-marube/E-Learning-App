@@ -113,7 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     user && item.roles.includes(user.role)
   );
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string | undefined) => path && location.pathname === path;
 
   if (!user) return null;
 
@@ -141,19 +141,17 @@ const Sidebar: React.FC<SidebarProps> = ({
               </span>
             </div>
           )}
-          {onToggle && (
-            <button
-              onClick={onToggle}
-              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {isCollapsed ? (
-                <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-              ) : (
-                <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-              )}
-            </button>
-          )}
+          <button
+            onClick={() => {}}
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+            ) : (
+              <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -184,7 +182,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {filteredMenuItems.map((item) => (
             <li key={item.id} role="none">
               <Link
-                to={item.path}
+                to={item.path || '#'}
                 className={`
                   w-full flex items-center gap-3 px-3 py-2.5 rounded-lg 
                   transition-colors duration-200 group
