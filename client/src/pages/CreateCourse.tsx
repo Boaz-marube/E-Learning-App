@@ -21,8 +21,8 @@ interface CourseFormData {
   description: string;
   category: string;
   level: 'beginner' | 'intermediate' | 'advanced';
-  price: number;
-  duration: number;
+  price: number | string;
+  duration: number | string;
   tags: string[];
   thumbnail: string;
 }
