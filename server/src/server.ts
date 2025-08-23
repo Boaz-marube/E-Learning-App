@@ -33,6 +33,16 @@ app.get('/seed', async (req, res) => {
   }
 });
 
+// Update course thumbnails
+app.get('/update-thumbnails', async (req, res) => {
+  try {
+    const { updateCourseThumbnails } = await import('./controllers/updateController');
+    await updateCourseThumbnails(req, res);
+  } catch (error) {
+    res.status(500).json({ status: 'ERROR', message: 'Update failed', error });
+  }
+});
+
 (async function startUp() {
   try {
     // Connect MongoDB
