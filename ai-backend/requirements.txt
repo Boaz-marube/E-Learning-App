@@ -1,0 +1,20 @@
+# requirements.txt
+
+# Core LangChain & Graph
+langchain
+langgraph
+
+# LLM Integration (Google Gemini)
+langchain-google-genai
+langchain_community
+
+# Vector Database
+chromadb
+
+# API & Environment
+fastapi
+uvicorn
+python-dotenv
+
+# For TypedDict compatibility
+typing_extensions
