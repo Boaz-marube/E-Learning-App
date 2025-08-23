@@ -55,8 +55,8 @@ export const useLessonData = (courseId: string, lessonId: string) => {
         await new Promise(resolve => setTimeout(resolve, 300));
         
         // Get lesson data
-        const lessonData = mockLessons[courseId as keyof typeof mockLessons]?.[lessonId as keyof typeof mockLessons[courseId]];
-        const courseData = mockCourses[courseId as keyof typeof mockCourses];
+        const lessonData = (mockLessons as any)[courseId]?.[lessonId];
+        const courseData = (mockCourses as any)[courseId];
         
         if (!lessonData || !courseData) {
           setError('Lesson or course not found');

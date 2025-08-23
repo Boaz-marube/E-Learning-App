@@ -1,11 +1,9 @@
-import type { ReactNode } from 'react';
-
 export type UserRole = 'student' | 'instructor' | 'admin';
 
 export interface MenuItem {
   id: string;
   label: string;
-  icon: ReactNode;
+  icon: any;
   path: string;
   roles: UserRole[];
 }
