@@ -118,7 +118,7 @@ export const useCourses = (filters: CourseFilters) => {
               price: `$${course.price}`
             }));
             setCourses(apiCourses);
-            setTotalCourses(response.data.pagination?.total || apiCourses.length);
+            setTotalCourses(apiCourses.length);
           }
         } else {
           // Use featured courses API for no search
