@@ -320,7 +320,7 @@ const Notifications: React.FC = () => {
                       className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-all duration-200 ${
                         !notification.read ? "ring-2 ring-opacity-20" : ""
                       }`}
-                      style={!notification.read ? { ringColor: '#006d3a' } : {}}
+                      style={{}}
                     >
                       <div className="p-4">
                         <div className="flex items-start gap-4">

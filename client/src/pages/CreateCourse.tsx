@@ -226,7 +226,7 @@ const CreateCourse: React.FC = () => {
                   min="0"
                   step="0.01"
                   value={formData.price}
-                  onChange={(e) => handleInputChange('price', parseFloat(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange('price', Number(e.target.value) || 0)}
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent dark:bg-gray-800 dark:text-white ${
                     errors.price ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   }`}
@@ -244,7 +244,7 @@ const CreateCourse: React.FC = () => {
                   type="number"
                   min="1"
                   value={formData.duration}
-                  onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange('duration', Number(e.target.value) || 0)}
                   className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent dark:bg-gray-800 dark:text-white ${
                     errors.duration ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                   }`}
