@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import VerifyCode from './pages/VerifyCode';
+import About from './pages/About';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/verify-code" element={<VerifyCode />} />
+                   <Route path="/about" element={<About />} />
               <Route 
                 path="/dashboard" 
                 element={
