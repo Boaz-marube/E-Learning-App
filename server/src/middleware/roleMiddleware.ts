@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserRole } from '../../../types/shared';
+import { UserRole } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 export const roleMiddleware = (...roles: UserRole[]) => {

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { UserRole } from '../../../types';
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'student'
+    role: UserRole.STUDENT
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,7 @@ const Signup: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.name === 'role' ? e.target.value as UserRole : e.target.value
     });
   };
 
@@ -113,8 +114,8 @@ const Signup: React.FC = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="student">Student</option>
-                <option value="instructor">Instructor</option>
+                <option value={UserRole.STUDENT}>Student</option>
+                <option value={UserRole.INSTRUCTOR}>Instructor</option>
               </select>
             </div>
           </div>

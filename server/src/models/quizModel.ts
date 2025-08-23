@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Quiz, Question } from '../../../types/shared';
+import { Quiz, Question } from '../../../types';
 
 export interface IQuiz extends Document, Omit<Quiz, '_id' | 'lessonId' | 'questions'> {
   lessonId: mongoose.Types.ObjectId;

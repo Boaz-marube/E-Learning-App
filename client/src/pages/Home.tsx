@@ -3,7 +3,6 @@
 import type React from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "..//context/AuthContext"
-import Footer from "..//components/layout/footer"
 
 const Home: React.FC = () => {
   const { user } = useAuth()
@@ -365,8 +364,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <Footer />
+      
     </div>
   )
 }

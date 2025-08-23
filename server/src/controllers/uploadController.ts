@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import ContentModel from '../models/contentModel';
-import { ApiResponse, Content, UploadResponse } from '../../../types/shared';
+import { ApiResponse, Content, UploadResponse } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 import { uploadToCloudinary, deleteFromCloudinary } from '../utils/cloudinary';
 

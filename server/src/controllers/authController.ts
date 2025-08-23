@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import UserModel from '../models/userModel';
 import { generateToken } from '../utils/jwt';
-import { ApiResponse, AuthResponse, UserRole } from '../../../types/shared';
+import { ApiResponse, AuthResponse, UserRole } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 import CourseModel from '../models/courseModel';
 import EnrollmentModel from '../models/enrollmentModel';
-import { Course } from '../../../types/shared';
+import { Course } from '../../../types';
 import { Types } from 'mongoose';
 
 interface SignupRequest {

@@ -9,7 +9,7 @@ import {
   LessonWithAccess, 
   ProgressUpdateRequest,
   CourseProgress
-} from '../../../types/shared';
+} from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Get course lessons (enrolled students only)

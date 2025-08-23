@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
-import { UserRole } from "../../../types/shared";
+import { UserRole } from "../../../types";
 
 // Email regex pattern
 const emailRegexPattern: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

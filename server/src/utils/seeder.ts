@@ -7,7 +7,7 @@ import NotificationModel from '../models/notificationModel';
 import ContentModel from '../models/contentModel';
 import ProgressModel from '../models/progressModel';
 import AchievementModel from '../models/achievementModel';
-import { UserRole } from '../../../types/shared';
+import { UserRole } from '../../../types';
 import { config } from '../config/config';
 
 export const seedDatabase = async () => {

@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Testimonial } from '../../../types/shared';
+import { Testimonial } from '../../../types';
 
 export interface ITestimonial extends Document, Omit<Testimonial, '_id'> {}
 

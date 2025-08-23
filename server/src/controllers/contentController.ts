@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import ContentModel from '../models/contentModel';
-import { ApiResponse, Content } from '../../../types/shared';
+import { ApiResponse, Content } from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Get content by ID (secure access)

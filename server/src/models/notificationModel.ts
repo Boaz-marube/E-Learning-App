@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Notification } from '../../../types/shared';
+import { Notification } from '../../../types';
 
 export interface INotification extends Document, Omit<Notification, '_id' | 'userId'> {
   userId: mongoose.Types.ObjectId;

@@ -74,7 +74,7 @@ import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 import UserModel from '../models/userModel';
 import ErrorHandler from '../utils/errorHandler';
-import { UserRole } from '../../../types/shared';
+import { UserRole } from '../../../types';
 import { Types } from 'mongoose';
 
 // Extend Request interface to include user

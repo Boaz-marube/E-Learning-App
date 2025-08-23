@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Content } from '../../../types/shared';
+import { Content } from '../../../types';
 
 export interface IContent extends Document, Omit<Content, '_id' | 'uploadedBy' | 'courseId'> {
   uploadedBy: mongoose.Types.ObjectId;

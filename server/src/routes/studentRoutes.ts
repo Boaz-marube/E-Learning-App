@@ -9,7 +9,7 @@ import {
 } from '../controllers/studentController';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { roleMiddleware } from '../middleware/roleMiddleware';
-import { UserRole } from '../../../types/shared';
+import { UserRole } from '../../../types';
 
 const router = Router();
 

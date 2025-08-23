@@ -12,7 +12,7 @@ import {
   InstructorEarnings, 
   InstructorStudent,
   UserRole 
-} from '../../../types/shared';
+} from '../../../types';
 import ErrorHandler from '../utils/errorHandler';
 
 // Get instructor dashboard overview

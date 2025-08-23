@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { Lesson } from '../../../types/shared';
+import { Lesson } from '../../../types';
 
 export interface ILesson extends Document, Omit<Lesson, '_id' | 'courseId'> {
   courseId: mongoose.Types.ObjectId;
