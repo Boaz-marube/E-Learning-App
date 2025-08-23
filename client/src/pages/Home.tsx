@@ -2,7 +2,8 @@
 
 import type React from "react"
 import { Link } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "..//context/AuthContext"
+import Footer from "..//components/layout/footer"
 
 const Home: React.FC = () => {
   const { user } = useAuth()
@@ -257,7 +258,7 @@ const Home: React.FC = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Expert Instructors</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Affordable Pricing</h3>
               <p className="text-gray-600 mb-6">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
               </p>
@@ -281,7 +282,7 @@ const Home: React.FC = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Expert Instructors</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Global Opportunities</h3>
               <p className="text-gray-600 mb-6">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
               </p>
@@ -343,12 +344,12 @@ const Home: React.FC = () => {
                 <div className="flex items-start mb-4">
                   <img
                     src="/assets/student2.jpg"
-                    alt="Hannah Schmitt"
+                    alt="John Doe"
                     className="w-16 h-16 rounded-full object-cover mr-4 flex-shrink-0"
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900 text-lg">Hannah Schmitt</h4>
-                    <p className="text-gray-600 text-sm">Lead designer</p>
+                    <h4 className="font-bold text-gray-900 text-lg">John Doe</h4>
+                    <p className="text-gray-600 text-sm">Software Developer</p>
                   </div>
                 </div>
                 <div className="text-4xl mb-3" style={{ color: "#00693F" }}>
@@ -363,6 +364,9 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
