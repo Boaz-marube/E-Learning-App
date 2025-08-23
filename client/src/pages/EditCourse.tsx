@@ -15,8 +15,8 @@ interface CourseFormData {
   description: string;
   category: string;
   level: 'beginner' | 'intermediate' | 'advanced';
-  price: number;
-  duration: number;
+  price: number | string;
+  duration: number | string;
   tags: string[];
   thumbnail: string;
   isPublished: boolean;
@@ -245,7 +245,7 @@ const EditCourse: React.FC = () => {
                     min="0"
                     step="0.01"
                     value={formData.price}
-                    onChange={(e) => handleInputChange('price', Number(e.target.value) || 0)}
+                    onChange={(e) => handleInputChange('price', e.target.value)}
                     className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent dark:bg-gray-800 dark:text-white ${
                       errors.price ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                     }`}
@@ -263,7 +263,7 @@ const EditCourse: React.FC = () => {
                     type="number"
                     min="1"
                     value={formData.duration}
-                    onChange={(e) => handleInputChange('duration', Number(e.target.value) || 0)}
+                    onChange={(e) => handleInputChange('duration', e.target.value))
                     className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent dark:bg-gray-800 dark:text-white ${
                       errors.duration ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                     }`}
