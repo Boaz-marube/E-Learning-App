@@ -4,11 +4,21 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 from langchain_core.messages import HumanMessage
+from fastapi.middleware.cors import CORSMiddleware 
+
 
 from graph.graph import create_enhanced_graph
 from graph.synthesizer import response_synthesizer_node
 
 app = FastAPI(title="DirectEd AI Tutor API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],      # Allow all HTTP methods
+    allow_headers=["*"],      # Allow all headers
+)
 
 # Initialize the compiled graph
 graph_app = create_enhanced_graph()
