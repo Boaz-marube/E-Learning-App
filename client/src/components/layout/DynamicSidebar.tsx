@@ -110,10 +110,10 @@ const DynamicSidebar: React.FC<SidebarProps> = ({ className = "", isCollapsed = 
       roles: ['student', 'instructor'] as UserRole[]
     },
     {
-      id: 'ai-assistant',
+      id: 'chatbot',
       label: 'AI Assistant',
       icon: <Bot className="w-5 h-5" />,
-      path: '/ai-assistant',
+      path: '/chatbot',
       roles: ['student', 'instructor'] as UserRole[]
     },
     {
