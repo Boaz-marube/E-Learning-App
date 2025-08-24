@@ -81,13 +81,13 @@ def adaptive_conversation_chain_node(state: GraphState):
                     learning_focus = "complex concepts, mastery, and advanced applications"
                     pathway_options = "comprehensive analysis, challenging practice, and expert insights"
 
-                prompt = ChatPromptTemplate.from_template(
-                    f"""You are an adaptive conversation chain for {student_level.upper()} STUDENTS.
-                    Focus on {learning_focus}.
+                # Build the template string without f-string to avoid variable conflicts
+                prompt_template = """You are an adaptive conversation chain for """ + student_level.upper() + """ STUDENTS.
+                    Focus on """ + learning_focus + """.
                     
-    Student message: "{{user_message}}"
-    Student level: {{student_level}}
-    Learning context: {{conversation_history}}
+    Student message: "{user_message}"
+    Student level: """ + student_level + """  
+    Learning context: {conversation_history}
 
     Adaptive learning pathways:
     - 'rag': For concept explanations, learning materials, or knowledge questions
@@ -96,9 +96,10 @@ def adaptive_conversation_chain_node(state: GraphState):
     - 'progress': For checking learning advancement, achievements, or next learning steps
     - 'chat': For motivation, learning strategy discussion, or general educational support
 
-    Prioritize {pathway_options} for this {student_level} learner.
+    Prioritize """ + pathway_options + """ for this """ + student_level + """ learner.
     Return only one word: 'rag', 'generate', 'practice', 'progress', or 'chat'."""
-                )
+                
+                prompt = ChatPromptTemplate.from_template(prompt_template)
 
         # Using optimized model for educational routing decisions
         model = get_routing_llm()  # Centralized LLM configuration with low temperature for consistent routing
@@ -111,7 +112,6 @@ def adaptive_conversation_chain_node(state: GraphState):
                 chain.invoke,
                 {
                     "user_message": last_user_message,
-                    "student_level": student_level,
                     "conversation_history": str(conversation_history)
                 }
             ).content.strip().lower()

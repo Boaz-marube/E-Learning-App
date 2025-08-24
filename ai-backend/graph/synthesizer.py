@@ -63,21 +63,48 @@ Maintain a professional, knowledgeable tone suitable for educators."""
 
     # Add curriculum or generated content context
     if retrieved_docs:
+        # Escape curly braces in retrieved content to prevent template variable conflicts
+        escaped_docs = []
+        for doc in retrieved_docs:
+            # Escape single curly braces by doubling them
+            escaped_doc = doc.replace('{', '{{').replace('}', '}}')
+            escaped_docs.append(escaped_doc)
+        
         content_context = "\n\nAnswer using ONLY the following curriculum information:\n\n---\n"
-        content_context += "\n\n".join(retrieved_docs)
+        content_context += "\n\n".join(escaped_docs)
         content_context += "\n---\n\nIf the information isn't in the provided content, say so and suggest where the student might find more information."
         base_context += content_context
     elif generated_content:
+        # Escape curly braces in generated content too
+        escaped_content = generated_content.replace('{', '{{').replace('}', '}}')
         content_context = "\n\nPresent the following generated educational content to the user in an engaging and helpful way:\n\n---\n"
-        content_context += generated_content
+        content_context += escaped_content
         content_context += "\n---\n\nProvide any additional context or guidance that would be helpful."
         base_context += content_context
 
-    # Create the prompt
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", base_context),
-        ("human", "{user_message}")
-    ])
+    # Create the prompt with conversation history
+    if len(messages) > 1:
+        # Include conversation history if available
+        conversation_messages = []
+        for msg in messages[:-1]:  # All except the last message
+            if hasattr(msg, 'content'):
+                role = "assistant" if hasattr(msg, '__class__') and "AI" in msg.__class__.__name__ else "user"
+                conversation_messages.append((role, msg.content))
+        
+        # Add the current user message
+        conversation_messages.append(("user", messages[-1].content))
+        
+        # Create prompt with full conversation
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", base_context),
+            *conversation_messages
+        ])
+    else:
+        # Fallback to single message format
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", base_context),
+            ("human", "{user_message}")
+        ])
 
     # Use different temperatures based on user type
     temperature = 0.5 if user_type == "instructor" else 0.7
@@ -89,7 +116,12 @@ Maintain a professional, knowledgeable tone suitable for educators."""
     last_user_message = messages[-1].content if messages else state.get("message", "")
     
     # Generate AI response
-    final_response = chain.invoke({"user_message": last_user_message}).content
+    if len(messages) > 1:
+        # Use conversation history - no additional invoke parameters needed
+        final_response = chain.invoke({}).content
+    else:
+        # Single message - use the user_message parameter
+        final_response = chain.invoke({"user_message": last_user_message}).content
 
     print(f"Generated {user_type}-personalized response.")
 

@@ -10,10 +10,11 @@ switch models, adjust parameters, or modify behavior system-wide.
 import os
 import logging
 from typing import Optional
-from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 import time
 from functools import wraps
+from langchain.chat_models import init_chat_model
+import getpass
 
 # Load environment variables
 load_dotenv()
@@ -47,40 +48,41 @@ class LLMRateLimitError(LLMError):
 class LLMConfig:
     """Centralized configuration for all LLM instances in the educational system."""
     
-    # Default model configuration
-    DEFAULT_MODEL = "gemini-1.5-flash"
+    # Default model configuration - now using Groq
+    DEFAULT_MODEL = "moonshotai/kimi-k2-instruct"
     DEFAULT_TEMPERATURE = 0.7
     ROUTING_TEMPERATURE = 0.1  # Lower temperature for consistent routing decisions
+    MODEL_PROVIDER = "groq"
     
-    # Model variants for different use cases
+    # Model variants for different use cases (all using same Groq model for now)
     MODELS = {
-        "default": "gemini-1.5-flash",          # General purpose, balanced performance
-        "routing": "gemini-1.5-flash",          # For routing decisions (consistency important)
-        "generation": "gemini-1.5-flash",       # For content generation
-        "assessment": "gemini-1.5-flash",       # For assessments and evaluations
-        "synthesis": "gemini-1.5-flash"        # For response synthesis
+        "default": "moonshotai/kimi-k2-instruct",          # General purpose, balanced performance
+        "routing": "moonshotai/kimi-k2-instruct",          # For routing decisions (consistency important)
+        "generation": "moonshotai/kimi-k2-instruct",       # For content generation
+        "assessment": "moonshotai/kimi-k2-instruct",       # For assessments and evaluations
+        "synthesis": "moonshotai/kimi-k2-instruct"         # For response synthesis
     }
     
     @classmethod
     def validate_configuration(cls):
         """Validate LLM configuration before use."""
-        api_key = os.getenv("GOOGLE_API_KEY")
+        api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             raise LLMConfigurationError(
-                "GOOGLE_API_KEY environment variable is required. "
+                "GROQ_API_KEY environment variable is required. "
                 "Please check your .env file or environment settings."
             )
         
         if len(api_key.strip()) < 10:
             raise LLMConfigurationError(
-                "GOOGLE_API_KEY appears to be invalid (too short). "
+                "GROQ_API_KEY appears to be invalid (too short). "
                 "Please verify your API key."
             )
         
         return True
     
     @classmethod
-    def get_llm(cls, use_case: str = "default", temperature: Optional[float] = None) -> ChatGoogleGenerativeAI:
+    def get_llm(cls, use_case: str = "default", temperature: Optional[float] = None):
         """
         Get a configured LLM instance for a specific use case with error handling.
         
@@ -89,7 +91,7 @@ class LLMConfig:
             temperature: Override temperature for this instance (optional)
             
         Returns:
-            Configured ChatGoogleGenerativeAI instance
+            Configured Groq LLM instance
             
         Raises:
             LLMConfigurationError: If configuration is invalid
@@ -111,9 +113,6 @@ class LLMConfig:
                     logger.warning(f"Temperature {temperature} outside recommended range [0.0, 2.0], using default")
                     temperature = None
             
-            # Get API key
-            api_key = os.getenv("GOOGLE_API_KEY")
-            
             # Select model for use case
             model = cls.MODELS.get(use_case, cls.DEFAULT_MODEL)
             
@@ -127,10 +126,10 @@ class LLMConfig:
             
             logger.info(f"Creating LLM for use case '{use_case}' with model '{model}' and temperature {temp}")
             
-            return ChatGoogleGenerativeAI(
-                model=model,
-                temperature=temp,
-                google_api_key=api_key
+            return init_chat_model(
+                model,
+                model_provider=cls.MODEL_PROVIDER,
+                temperature=temp
             )
             
         except Exception as e:
@@ -140,22 +139,22 @@ class LLMConfig:
                 raise LLMError(f"Failed to create LLM instance: {str(e)}") from e
     
     @classmethod
-    def get_routing_llm(cls) -> ChatGoogleGenerativeAI:
+    def get_routing_llm(cls):
         """Get an LLM optimized for routing decisions (low temperature, consistent)."""
         return cls.get_llm("routing")
     
     @classmethod
-    def get_generation_llm(cls) -> ChatGoogleGenerativeAI:
+    def get_generation_llm(cls):
         """Get an LLM optimized for content generation."""
         return cls.get_llm("generation")
     
     @classmethod
-    def get_assessment_llm(cls, temperature: Optional[float] = None) -> ChatGoogleGenerativeAI:
+    def get_assessment_llm(cls, temperature: Optional[float] = None):
         """Get an LLM optimized for assessments and evaluations."""
         return cls.get_llm("assessment", temperature)
     
     @classmethod
-    def get_synthesis_llm(cls) -> ChatGoogleGenerativeAI:
+    def get_synthesis_llm(cls):
         """Get an LLM optimized for response synthesis."""
         return cls.get_llm("synthesis")
 
@@ -195,7 +194,7 @@ def with_retry_and_error_handling(max_retries: int = 3, backoff_factor: float = 
                     
                     elif "401" in error_message or "unauthorized" in error_message or "api key" in error_message:
                         raise LLMConfigurationError(
-                            "Authentication failed. Please check your GOOGLE_API_KEY."
+                            "Authentication failed. Please check your GROQ_API_KEY."
                         ) from e
                     
                     elif "400" in error_message or "invalid" in error_message:
@@ -222,7 +221,7 @@ def with_retry_and_error_handling(max_retries: int = 3, backoff_factor: float = 
 
 # Enhanced convenience functions with error handling
 @with_retry_and_error_handling(max_retries=MAX_RETRIES, backoff_factor=1.5)
-def get_educational_llm(use_case: str = "default", temperature: Optional[float] = None) -> ChatGoogleGenerativeAI:
+def get_educational_llm(use_case: str = "default", temperature: Optional[float] = None):
     """
     Convenience function to get a configured educational LLM with error handling.
     
@@ -239,22 +238,22 @@ def get_educational_llm(use_case: str = "default", temperature: Optional[float] 
     return LLMConfig.get_llm(use_case, temperature)
 
 @with_retry_and_error_handling(max_retries=MAX_RETRIES, backoff_factor=1.0)
-def get_routing_llm() -> ChatGoogleGenerativeAI:
+def get_routing_llm():
     """Get an LLM optimized for routing decisions with error handling."""
     return LLMConfig.get_routing_llm()
 
 @with_retry_and_error_handling(max_retries=MAX_RETRIES, backoff_factor=1.5)
-def get_generation_llm() -> ChatGoogleGenerativeAI:
+def get_generation_llm():
     """Get an LLM optimized for content generation with error handling."""
     return LLMConfig.get_generation_llm()
 
 @with_retry_and_error_handling(max_retries=MAX_RETRIES, backoff_factor=1.2)
-def get_assessment_llm(temperature: Optional[float] = None) -> ChatGoogleGenerativeAI:
+def get_assessment_llm(temperature: Optional[float] = None):
     """Get an LLM optimized for assessments with error handling."""
     return LLMConfig.get_assessment_llm(temperature)
 
 @with_retry_and_error_handling(max_retries=MAX_RETRIES, backoff_factor=1.0)
-def get_synthesis_llm() -> ChatGoogleGenerativeAI:
+def get_synthesis_llm():
     """Get an LLM optimized for response synthesis with error handling."""
     return LLMConfig.get_synthesis_llm()
 

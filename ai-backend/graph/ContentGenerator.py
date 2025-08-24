@@ -45,7 +45,13 @@ def content_generator_node(state: GraphState):
             retrieved_docs = []
 
     if retrieved_docs:
-        curriculum_context = f"\n\nCurriculum Reference Materials:\n{'='*50}\n" + "\n\n".join(retrieved_docs) + f"\n{'='*50}\n"
+        # Escape curly braces in retrieved content to prevent template variable conflicts
+        escaped_docs = []
+        for doc in retrieved_docs:
+            escaped_doc = doc.replace('{', '{{').replace('}', '}}')
+            escaped_docs.append(escaped_doc)
+        
+        curriculum_context = f"\n\nCurriculum Reference Materials:\n{'='*50}\n" + "\n\n".join(escaped_docs) + f"\n{'='*50}\n"
 
     # Advanced content generation prompts based on educational roles
     if user_type == "instructor":
@@ -95,19 +101,20 @@ and supports effective teaching practices."""
                 "structure": "integrated learning with capstone projects"
             }
 
-        prompt_template = f"""You are an adaptive EDUCATIONAL CONTENT GENERATOR for {student_level.upper()} STUDENTS.
+        # Build the template string without f-string to avoid variable conflicts
+        prompt_template = """You are an adaptive EDUCATIONAL CONTENT GENERATOR for """ + student_level.upper() + """ STUDENTS.
 Create personalized, engaging learning materials for web development and Python.
 
-Student request: "{{user_message}}"
-Learning level: {student_level}
-{curriculum_context}
+Student request: "{user_message}"
+Learning level: """ + student_level + """
+""" + curriculum_context + """
 
 ADAPTIVE CONTENT GENERATION GUIDELINES:
-- Tone: {content_approach['tone']}
-- Complexity: {content_approach['complexity']}
-- Examples: {content_approach['examples']}
-- Practice: {content_approach['practice']}
-- Structure: {content_approach['structure']}
+- Tone: """ + content_approach['tone'] + """
+- Complexity: """ + content_approach['complexity'] + """
+- Examples: """ + content_approach['examples'] + """
+- Practice: """ + content_approach['practice'] + """
+- Structure: """ + content_approach['structure'] + """
 
 STUDENT CONTENT FEATURES:
 - Make content interactive and engaging
@@ -119,7 +126,7 @@ STUDENT CONTENT FEATURES:
 - Include progress indicators and achievement milestones
 - Encourage exploration and creative problem-solving
 
-Generate personalized educational content perfectly tailored to this {student_level} student's learning needs."""
+Generate personalized educational content perfectly tailored to this """ + student_level + """ student's learning needs."""
 
     prompt = ChatPromptTemplate.from_template(prompt_template)
     model = get_generation_llm()  # Centralized LLM configuration for content generation
