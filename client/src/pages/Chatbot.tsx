@@ -173,7 +173,7 @@ const Chatbot: React.FC = () => {
                   message.sender === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
-                {message.sender === 'ai' && (
+                {message.sender === 'assistant' && (
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: '#00693F' }}

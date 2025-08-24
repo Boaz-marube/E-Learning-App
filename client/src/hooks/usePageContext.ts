@@ -1,6 +1,6 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { AssistantContext, QuickAction } from '../types/assistant';
+import { QuickAction } from '../types/assistant';
 
 export const useAssistantContext = (): { 
   userId: string;
