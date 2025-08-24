@@ -24,7 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col overflow-x-hidden">
       {/* Global Sidebar - Only for logged-in users */}
       {user && (
         <>
@@ -56,7 +56,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       )}
       
       <Navbar />
-      <main className={`flex-1 ${user ? 'ml-16 lg:ml-16' : ''}`}>{children}</main>
+      <main className={`flex-1 ${user ? 'ml-16 lg:ml-16' : ''} overflow-x-hidden pt-16`}>{children}</main>
       <Footer />
     </div>
   );

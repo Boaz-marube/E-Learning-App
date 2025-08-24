@@ -34,16 +34,21 @@ export const uploadDocument = async (
     }
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedTypes = [
+      'image/jpeg', 'image/png', 'image/gif', 
+      'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'video/mp4', 'video/avi', 'video/mov', 'video/webm', 'video/quicktime'
+    ];
     
     if (!allowedTypes.includes(req.file.mimetype)) {
-      return next(new ErrorHandler('Invalid file type. Only images, PDFs, and documents are allowed', 400));
+      return next(new ErrorHandler('Invalid file type. Only images, PDFs, documents, and videos are allowed', 400));
     }
 
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // Validate file size (max 100MB for videos, 10MB for others)
+    const isVideo = req.file.mimetype.startsWith('video/');
+    const maxSize = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024; // 100MB for videos, 10MB for others
     if (req.file.size > maxSize) {
-      return next(new ErrorHandler('File size too large. Maximum 10MB allowed', 400));
+      return next(new ErrorHandler(`File size too large. Maximum ${isVideo ? '100MB' : '10MB'} allowed`, 400));
     }
 
     // Determine file type
@@ -52,6 +57,8 @@ export const uploadDocument = async (
       fileType = 'image';
     } else if (req.file.mimetype === 'application/pdf') {
       fileType = 'pdf';
+    } else if (req.file.mimetype.startsWith('video/')) {
+      fileType = 'video';
     } else {
       fileType = 'document';
     }

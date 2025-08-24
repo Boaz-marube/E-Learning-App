@@ -10,6 +10,7 @@ router.use(authMiddleware);
 
 // Note: Multer middleware will be added when implementing actual file upload
 router.post('/document', uploadSingle, uploadDocument);
+router.post('/video', uploadSingle, uploadDocument); // Same handler, different route for clarity
 router.get('/my-content', getUserContent);
 router.delete('/:id', deleteContent);
 
