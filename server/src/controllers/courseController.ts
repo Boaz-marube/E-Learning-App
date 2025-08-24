@@ -1,23 +1,23 @@
-import { Request, Response, NextFunction } from 'express';
-import { Types } from 'mongoose';
-import CourseModel from '../models/courseModel';
-import EnrollmentModel from '../models/enrollmentModel';
-import ProgressModel from '../models/progressModel';
-import { 
-  ApiResponse, 
-  CourseFilters, 
-  PaginatedCourses, 
+import { Request, Response, NextFunction } from "express";
+import { Types } from "mongoose";
+import CourseModel from "../models/courseModel";
+import EnrollmentModel from "../models/enrollmentModel";
+import ProgressModel from "../models/progressModel";
+import {
+  ApiResponse,
+  CourseFilters,
+  PaginatedCourses,
   CourseDetails,
   CourseCreateRequest,
   CourseUpdateRequest,
-  Course
-} from '../../../types';
-import ErrorHandler from '../utils/errorHandler';
+  Course,
+} from "../../../types";
+import ErrorHandler from "../utils/errorHandler";
 
 // Get paginated courses with filters (Public)
 export const getCourses = async (
-  req: Request<{}, {}, {}, CourseFilters>, 
-  res: Response<ApiResponse<PaginatedCourses>>, 
+  req: Request<{}, {}, {}, CourseFilters>,
+  res: Response<ApiResponse<PaginatedCourses>>,
   next: NextFunction
 ) => {
   try {
@@ -27,10 +27,10 @@ export const getCourses = async (
       level,
       minPrice,
       maxPrice,
-      sortBy = 'createdAt',
-      sortOrder = 'desc',
+      sortBy = "createdAt",
+      sortOrder = "desc",
       page = 1,
-      limit = 12
+      limit = 12,
     } = req.query;
 
     // Build filter query
@@ -38,8 +38,8 @@ export const getCourses = async (
 
     if (search) {
       filter.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } }
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -64,20 +64,20 @@ export const getCourses = async (
 
     // Sort configuration
     const sortConfig: any = {};
-    sortConfig[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    sortConfig[sortBy] = sortOrder === "asc" ? 1 : -1;
 
     // Execute queries
     const [courses, totalCount] = await Promise.all([
       CourseModel.find(filter)
-        .populate('instructor', 'name email')
+        .populate("instructor", "name email")
         .sort(sortConfig)
         .skip(skip)
         .limit(limitNum),
-      CourseModel.countDocuments(filter)
+      CourseModel.countDocuments(filter),
     ]);
 
     // Transform to shared type format
-    const courseData: Course[] = courses.map(course => ({
+    const courseData: Course[] = courses.map((course) => ({
       _id: (course._id as Types.ObjectId).toString(),
       title: course.title,
       description: course.description,
@@ -93,7 +93,7 @@ export const getCourses = async (
       enrollmentCount: course.enrollmentCount,
       rating: course.rating,
       createdAt: course.createdAt,
-      updatedAt: course.updatedAt
+      updatedAt: course.updatedAt,
     }));
 
     const totalPages = Math.ceil(totalCount / limitNum);
@@ -104,15 +104,14 @@ export const getCourses = async (
       currentPage: pageNum,
       totalPages,
       hasNextPage: pageNum < totalPages,
-      hasPrevPage: pageNum > 1
+      hasPrevPage: pageNum > 1,
     };
 
     res.status(200).json({
       success: true,
       message: `Found ${totalCount} courses`,
-      data: paginatedResult
+      data: paginatedResult,
     });
-
   } catch (error: any) {
     next(error);
   }
@@ -120,30 +119,30 @@ export const getCourses = async (
 
 // Get single course by ID (Public)
 export const getCourseById = async (
-  req: Request<{ id: string }>, 
-  res: Response<ApiResponse<CourseDetails>>, 
+  req: Request<{ id: string }>,
+  res: Response<ApiResponse<CourseDetails>>,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
 
     if (!Types.ObjectId.isValid(id)) {
-      return next(new ErrorHandler('Invalid course ID', 400));
+      return next(new ErrorHandler("Invalid course ID", 400));
     }
 
-    const course = await CourseModel.findOne({ 
-      _id: id, 
-      isPublished: true 
-    }).populate('instructor', 'name email bio');
+    const course = await CourseModel.findOne({
+      _id: id,
+      isPublished: true,
+    }).populate("instructor", "name email bio");
 
     if (!course) {
-      return next(new ErrorHandler('Course not found', 404));
+      return next(new ErrorHandler("Course not found", 404));
     }
 
     // Get enrollment count
-    const enrollmentCount = await EnrollmentModel.countDocuments({ 
-      courseId: id, 
-      isActive: true 
+    const enrollmentCount = await EnrollmentModel.countDocuments({
+      courseId: id,
+      isActive: true,
     });
 
     // Check if user is enrolled (if authenticated)
@@ -154,7 +153,7 @@ export const getCourseById = async (
       const enrollment = await EnrollmentModel.findOne({
         userId: req.user._id,
         courseId: id,
-        isActive: true
+        isActive: true,
       });
 
       isEnrolled = !!enrollment;
@@ -162,14 +161,14 @@ export const getCourseById = async (
       if (isEnrolled) {
         const progress = await ProgressModel.findOne({
           userId: req.user._id,
-          courseId: id
+          courseId: id,
         });
 
         if (progress) {
           userProgress = {
             progressPercentage: progress.progressPercentage,
             completedLessons: progress.completedLessons.length,
-            totalLessons: 10 // Mock total lessons
+            totalLessons: 10, // Mock total lessons
           };
         }
       }
@@ -184,7 +183,7 @@ export const getCourseById = async (
         _id: (course.instructor as any)._id.toString(),
         name: (course.instructor as any).name,
         email: (course.instructor as any).email,
-        bio: (course.instructor as any).bio
+        bio: (course.instructor as any).bio,
       },
       category: course.category,
       level: course.level,
@@ -201,35 +200,40 @@ export const getCourseById = async (
       isEnrolled,
       userProgress,
       createdAt: course.createdAt,
-      updatedAt: course.updatedAt
+      updatedAt: course.updatedAt,
     };
 
     res.status(200).json({
       success: true,
-      message: 'Course details retrieved successfully',
-      data: courseDetails
+      message: "Course details retrieved successfully",
+      data: courseDetails,
     });
-
   } catch (error: any) {
     next(error);
   }
 };
 
-// Create course (Instructor only)
+// Create course - (Instructor only)
 export const createCourse = async (
-  req: Request<{}, {}, CourseCreateRequest>, 
-  res: Response<ApiResponse>, 
+  req: Request<{}, {}, CourseCreateRequest>,
+  res: Response<ApiResponse>,
   next: NextFunction
 ) => {
   try {
     if (!req.user) {
-      return next(new ErrorHandler('Authentication required', 401));
+      return next(new ErrorHandler("Authentication required", 401));
     }
 
-    const { title, description, category, level, price, thumbnail, tags } = req.body;
+    const { title, description, category, level, price, thumbnail, tags } =
+      req.body;
 
     if (!title || !description || !category || !level || price === undefined) {
-      return next(new ErrorHandler('Title, description, category, level, and price are required', 400));
+      return next(
+        new ErrorHandler(
+          "Title, description, category, level, and price are required",
+          400
+        )
+      );
     }
 
     const course = await CourseModel.create({
@@ -239,23 +243,22 @@ export const createCourse = async (
       category,
       level,
       price,
-      thumbnail: thumbnail || '',
+      thumbnail: thumbnail || "",
       tags: tags || [],
       isPublished: false,
       isFeatured: false,
       enrollmentCount: 0,
-      rating: 0
+      rating: 0,
     });
 
     res.status(201).json({
       success: true,
-      message: 'Course created successfully',
+      message: "Course created successfully",
       data: {
         _id: (course._id as Types.ObjectId).toString(),
-        title: course.title
-      }
+        title: course.title,
+      },
     });
-
   } catch (error: any) {
     next(error);
   }
@@ -263,19 +266,19 @@ export const createCourse = async (
 
 // Update course (Instructor only - ownership verified)
 export const updateCourse = async (
-  req: Request<{ id: string }, {}, CourseUpdateRequest>, 
-  res: Response<ApiResponse>, 
+  req: Request<{ id: string }, {}, CourseUpdateRequest>,
+  res: Response<ApiResponse>,
   next: NextFunction
 ) => {
   try {
     if (!req.user) {
-      return next(new ErrorHandler('Authentication required', 401));
+      return next(new ErrorHandler("Authentication required", 401));
     }
 
     const { id } = req.params;
 
     if (!Types.ObjectId.isValid(id)) {
-      return next(new ErrorHandler('Invalid course ID', 400));
+      return next(new ErrorHandler("Invalid course ID", 400));
     }
 
     const course = await CourseModel.findOneAndUpdate(
@@ -285,14 +288,13 @@ export const updateCourse = async (
     );
 
     if (!course) {
-      return next(new ErrorHandler('Course not found or unauthorized', 404));
+      return next(new ErrorHandler("Course not found or unauthorized", 404));
     }
 
     res.status(200).json({
       success: true,
-      message: 'Course updated successfully'
+      message: "Course updated successfully",
     });
-
   } catch (error: any) {
     next(error);
   }
@@ -300,45 +302,46 @@ export const updateCourse = async (
 
 // Delete course (Instructor only - ownership verified)
 export const deleteCourse = async (
-  req: Request<{ id: string }>, 
-  res: Response<ApiResponse>, 
+  req: Request<{ id: string }>,
+  res: Response<ApiResponse>,
   next: NextFunction
 ) => {
   try {
     if (!req.user) {
-      return next(new ErrorHandler('Authentication required', 401));
+      return next(new ErrorHandler("Authentication required", 401));
     }
 
     const { id } = req.params;
 
     if (!Types.ObjectId.isValid(id)) {
-      return next(new ErrorHandler('Invalid course ID', 400));
+      return next(new ErrorHandler("Invalid course ID", 400));
     }
 
     // Check for active enrollments
-    const enrollmentCount = await EnrollmentModel.countDocuments({ 
-      courseId: id, 
-      isActive: true 
+    const enrollmentCount = await EnrollmentModel.countDocuments({
+      courseId: id,
+      isActive: true,
     });
 
     if (enrollmentCount > 0) {
-      return next(new ErrorHandler('Cannot delete course with active enrollments', 400));
+      return next(
+        new ErrorHandler("Cannot delete course with active enrollments", 400)
+      );
     }
 
     const course = await CourseModel.findOneAndDelete({
       _id: id,
-      instructor: req.user._id
+      instructor: req.user._id,
     });
 
     if (!course) {
-      return next(new ErrorHandler('Course not found or unauthorized', 404));
+      return next(new ErrorHandler("Course not found or unauthorized", 404));
     }
 
     res.status(200).json({
       success: true,
-      message: 'Course deleted successfully'
+      message: "Course deleted successfully",
     });
-
   } catch (error: any) {
     next(error);
   }
