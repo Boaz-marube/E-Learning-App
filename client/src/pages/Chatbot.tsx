@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { Send, Bot, User, BookOpen, HelpCircle, Dumbbell } from 'lucide-react';
+import { Send, Bot, User, BookOpen, HelpCircle, Dumbbell, Zap } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useAssistantContext } from '../hooks/usePageContext';
+import { assistantApi } from '../utils/assistantApi';
+import { AssistantMessage } from '../types/assistant';
 
-interface Message {
-  id: number;
-  text: string;
-  sender: 'user' | 'ai';
-}
+
 
 const Chatbot: React.FC = () => {
+  const { user } = useAuth();
+  const { userId, userType, studentLevel, quickActions } = useAssistantContext();
   const [currentMode, setCurrentMode] = useState('tutor');
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const modes = {
     tutor: {
@@ -33,27 +36,49 @@ const Chatbot: React.FC = () => {
     }
   };
 
-  const handleSendMessage = () => {
-    if (inputMessage.trim() === '') return;
+  const handleSendMessage = async (messageText?: string) => {
+    const text = messageText || inputMessage.trim();
+    if (text === '' || isLoading) return;
     
-    const newMessage: Message = {
-      id: Date.now(),
-      text: inputMessage,
-      sender: 'user'
+    const userMessage: AssistantMessage = {
+      id: Date.now().toString(),
+      text,
+      sender: 'user',
+      timestamp: new Date()
     };
     
-    setMessages([...messages, newMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
+    setIsLoading(true);
     
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: Date.now() + 1,
-        text: `As your ${modes[currentMode as keyof typeof modes].title.toLowerCase()}, I understand you're asking about: "${inputMessage}". I'm here to help you with that!`,
-        sender: 'ai'
+    try {
+      const response = await assistantApi.sendMessage({
+        user_id: userId,
+        user_type: userType,
+        message: text,
+        student_level: studentLevel
+      });
+      
+      const assistantMessage: AssistantMessage = {
+        id: (Date.now() + 1).toString(),
+        text: response.reply,
+        sender: 'assistant',
+        timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+      
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      const errorMessage: AssistantMessage = {
+        id: (Date.now() + 1).toString(),
+        text: 'I apologize, but I encountered an error. Please try again.',
+        sender: 'assistant',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -61,6 +86,10 @@ const Chatbot: React.FC = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleQuickAction = (message: string) => {
+    handleSendMessage(message);
   };
 
   const switchMode = (mode: string) => {
@@ -76,9 +105,14 @@ const Chatbot: React.FC = () => {
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <div className="flex items-center gap-2">
               <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-[#00693F]" />
-              <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                {modes[currentMode as keyof typeof modes].title}
-              </h1>
+              <div>
+                <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+                  {modes[currentMode as keyof typeof modes].title}
+                </h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+                  {userType} • {studentLevel} level
+                </p>
+              </div>
             </div>
           </div>
           
@@ -113,9 +147,23 @@ const Chatbot: React.FC = () => {
               <h3 className="text-base sm:text-lg font-medium mb-2 text-gray-900 dark:text-white px-4">
                 Welcome to your {modes[currentMode as keyof typeof modes].title}!
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-4">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-4 mb-4">
                 {modes[currentMode as keyof typeof modes].systemPrompt}
               </p>
+              
+              {/* Quick Actions */}
+              <div className="flex flex-wrap gap-2 justify-center px-4">
+                {quickActions.map(action => (
+                  <button
+                    key={action.id}
+                    onClick={() => handleQuickAction(action.message)}
+                    className="flex items-center gap-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <Zap className="w-3 h-3" />
+                    {action.label}
+                  </button>
+                ))}
+              </div>
             </div>
           ) : (
             messages.map((message) => (
@@ -125,12 +173,16 @@ const Chatbot: React.FC = () => {
                   message.sender === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
-                {message.sender === 'ai' && (
+                {message.sender === 'assistant' && (
                   <div 
                     className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: '#00693F' }}
                   >
-                    <Bot className="w-4 h-4 text-white" />
+                    {isLoading && message.sender === 'assistant' && messages[messages.length - 1].id === message.id ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    ) : (
+                      <Bot className="w-4 h-4 text-white" />
+                    )}
                   </div>
                 )}
                 
@@ -174,16 +226,20 @@ const Chatbot: React.FC = () => {
             </div>
             
             <button
-              onClick={handleSendMessage}
-              disabled={inputMessage.trim() === ''}
+              onClick={() => handleSendMessage()}
+              disabled={inputMessage.trim() === '' || isLoading}
               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-200 flex-shrink-0 ${
-                inputMessage.trim() === ''
+                inputMessage.trim() === '' || isLoading
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                   : 'text-white hover:opacity-90'
               }`}
-              style={inputMessage.trim() !== '' ? { backgroundColor: '#00693F' } : {}}
+              style={inputMessage.trim() !== '' && !isLoading ? { backgroundColor: '#00693F' } : {}}
             >
-              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              {isLoading ? (
+                <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-current"></div>
+              ) : (
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              )}
             </button>
           </div>
         </div>
