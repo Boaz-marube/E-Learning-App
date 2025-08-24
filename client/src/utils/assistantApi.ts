@@ -1,6 +1,21 @@
 import { AssistantRequest, AssistantResponse } from '../types/assistant';
 
-const ASSISTANT_API_URL = 'https://299dae2dbbcc.ngrok-free.app';
+// Convert markdown to plain text
+const markdownToText = (markdown: string): string => {
+  return markdown
+    .replace(/#{1,6}\s+/g, '') // Remove headers
+    .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+    .replace(/\*(.*?)\*/g, '$1') // Remove italic
+    .replace(/`(.*?)`/g, '$1') // Remove inline code
+    .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Remove links, keep text
+    .replace(/^[-*+]\s+/gm, '• ') // Convert list items to bullets
+    .replace(/^\d+\.\s+/gm, '• ') // Convert numbered lists to bullets
+    .replace(/\n{3,}/g, '\n\n') // Reduce multiple newlines
+    .trim();
+};
+
+const ASSISTANT_API_URL = 'https://directed-ai-latest.onrender.com';
 
 export const assistantApi = {
   async sendMessage(request: AssistantRequest): Promise<AssistantResponse> {
@@ -8,8 +23,7 @@ export const assistantApi = {
       const response = await fetch(`${ASSISTANT_API_URL}/chat`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(request)
       });
@@ -19,8 +33,9 @@ export const assistantApi = {
       }
 
       const data = await response.json();
+      const reply = data.reply || 'I apologize, but I could not process your request at the moment.';
       return {
-        reply: data.reply || 'I apologize, but I could not process your request at the moment.',
+        reply: markdownToText(reply),
         route_taken: data.route_taken || 'unknown'
       };
     } catch (error) {
