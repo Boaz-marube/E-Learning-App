@@ -19,6 +19,7 @@ import CreateQuiz from './pages/CreateQuiz';
 import QuizTaker from './pages/QuizTaker';
 import EditQuiz from './pages/EditQuiz';
 import EditCourse from './pages/EditCourse';
+import Chatbot from './pages/Chatbot';
 import ForgotPassword from './pages/ForgotPassword';
 import VerifyCode from './pages/VerifyCode';
 import About from './pages/About';
@@ -136,6 +137,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EditCourse />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/chatbot" 
+                element={
+                  <ProtectedRoute>
+                    <Chatbot />
                   </ProtectedRoute>
                 } 
               />

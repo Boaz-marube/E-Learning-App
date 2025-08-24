@@ -1,11 +1,11 @@
 import type React from "react"
 import { Link } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
+// import { useAuth } from "../context/AuthContext"
 import AfricaTechHero from "../components/ui/HeroSection"
 import FeaturedCourses from "../components/ui/FeaturedCourses"
 
 const Home: React.FC = () => {
-  const { user } = useAuth()
+  // const { user } = useAuth()
 
   return (
     <div className="relative">
