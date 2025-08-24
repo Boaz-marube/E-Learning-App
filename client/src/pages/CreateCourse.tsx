@@ -16,6 +16,16 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { uploadImage } from '../utils/uploadHelpers';
+import LessonManager from '../components/ui/LessonManager';
+
+interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  duration: number;
+  order: number;
+}
 
 interface CourseFormData {
   title: string;
@@ -26,6 +36,7 @@ interface CourseFormData {
   duration: number | string;
   tags: string[];
   thumbnail: string;
+  lessons: Lesson[];
 }
 
 const CreateCourse: React.FC = () => {
@@ -44,7 +55,8 @@ const CreateCourse: React.FC = () => {
     price: 0,
     duration: 0,
     tags: [],
-    thumbnail: ''
+    thumbnail: '',
+    lessons: []
   });
 
   const [errors, setErrors] = useState<Partial<CourseFormData>>({});
@@ -53,7 +65,8 @@ const CreateCourse: React.FC = () => {
     { number: 1, title: "Basic Information", description: "Course title, description, and category" },
     { number: 2, title: "Course Details", description: "Level, pricing, and duration" },
     { number: 3, title: "Media & Tags", description: "Thumbnail and course tags" },
-    { number: 4, title: "Review & Publish", description: "Review and publish your course" }
+    { number: 4, title: "Course Content", description: "Add lessons and videos" },
+    { number: 5, title: "Review & Publish", description: "Review and publish your course" }
   ];
 
   const categories = [
@@ -128,7 +141,7 @@ const CreateCourse: React.FC = () => {
   };
 
   const nextStep = () => {
-    if (validateStep(currentStep) && currentStep < 4) {
+    if (validateStep(currentStep) && currentStep < 5) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -374,6 +387,17 @@ const CreateCourse: React.FC = () => {
       case 4:
         return (
           <div className="space-y-6">
+            <LessonManager 
+              courseId="new-course"
+              lessons={formData.lessons}
+              onLessonsChange={(lessons) => handleInputChange('lessons', lessons)}
+            />
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Course Preview</h3>
               
@@ -447,8 +471,8 @@ const CreateCourse: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-4xl mx-auto p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-hidden">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create New Course</h1>
           <p className="text-gray-600 dark:text-gray-400">Share your knowledge and create engaging learning experiences</p>
@@ -456,7 +480,7 @@ const CreateCourse: React.FC = () => {
 
         {/* Progress Steps */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="hidden sm:flex items-center justify-between mb-4">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -469,26 +493,36 @@ const CreateCourse: React.FC = () => {
                   {step.number}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-24 h-0.5 mx-2 ${
+                  <div className={`w-16 lg:w-24 h-0.5 mx-2 ${
                     currentStep > step.number ? 'bg-[#006d3a]' : 'bg-gray-200 dark:bg-gray-700'
                   }`} />
                 )}
               </div>
             ))}
           </div>
+          
+          {/* Mobile Progress */}
+          <div className="sm:hidden mb-4">
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-6 h-6 bg-[#006d3a] text-white rounded-full flex items-center justify-center text-xs font-medium">
+                {currentStep}
+              </div>
+              <span className="text-sm text-gray-600 dark:text-gray-400">of {steps.length}</span>
+            </div>
+          </div>
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{steps[currentStep - 1].title}</h2>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">{steps[currentStep - 1].description}</p>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{steps[currentStep - 1].title}</h2>
+            <p className="text-gray-600 dark:text-gray-400 text-sm px-4">{steps[currentStep - 1].description}</p>
           </div>
         </div>
 
         {/* Form Content */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6 overflow-x-hidden">
           {renderStepContent()}
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
@@ -498,8 +532,8 @@ const CreateCourse: React.FC = () => {
             Previous
           </button>
 
-          <div className="flex gap-2">
-            {currentStep === 4 ? (
+          <div className="flex flex-col sm:flex-row gap-2">
+            {currentStep === 5 ? (
               <>
                 <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <Eye className="w-4 h-4" />
@@ -518,7 +552,8 @@ const CreateCourse: React.FC = () => {
             ) : (
               <button
                 onClick={nextStep}
-                className="flex items-center gap-2 px-6 py-2 text-white rounded-lg hover:opacity-90"
+                disabled={currentStep === 4 && formData.lessons.length === 0}
+                className="flex items-center gap-2 px-6 py-2 text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ backgroundColor: '#006d3a' }}
               >
                 Next

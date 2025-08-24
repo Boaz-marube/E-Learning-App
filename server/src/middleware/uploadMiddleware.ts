@@ -13,13 +13,18 @@ const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCa
     'image/gif',
     'application/pdf',
     'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'video/mp4',
+    'video/avi',
+    'video/mov',
+    'video/webm',
+    'video/quicktime'
   ];
 
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new ErrorHandler('Invalid file type. Only images, PDFs, and documents are allowed', 400));
+    cb(new ErrorHandler('Invalid file type. Only images, PDFs, documents, and videos are allowed', 400));
   }
 };
 
@@ -28,7 +33,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 100 * 1024 * 1024, // 100MB limit for videos
     files: 1 // Single file upload
   }
 });

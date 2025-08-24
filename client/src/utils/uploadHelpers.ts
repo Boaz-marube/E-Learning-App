@@ -34,6 +34,19 @@ export const uploadVideo = async (
   description?: string,
   courseId?: string
 ): Promise<UploadResult> => {
-  // Same as uploadImage - Cloudinary handles both
-  return uploadImage(file, title, description, courseId);
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('title', title);
+  if (description) formData.append('description', description);
+  if (courseId) formData.append('courseId', courseId);
+  formData.append('isPublic', 'true');
+
+  const response = await api.post('/api/upload/video', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+
+  return {
+    url: response.data.content.fileUrl,
+    contentId: response.data.content._id
+  };
 };

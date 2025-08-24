@@ -15,11 +15,17 @@ export const uploadToCloudinary = async (
 ): Promise<{ url: string; public_id: string }> => {
   
   return new Promise((resolve, reject) => {
+    const isVideo = fileType.startsWith('video/');
     const uploadOptions: any = {
       resource_type: 'auto', // Automatically detect file type
       public_id: `elearning/${Date.now()}_${fileName.split('.')[0]}`,
       use_filename: true,
-      unique_filename: false
+      unique_filename: false,
+      ...(isVideo && {
+        video_codec: 'h264',
+        quality: 'auto:good',
+        format: 'mp4'
+      })
     };
 
     // Upload stream

@@ -5,9 +5,11 @@ import { Instagram, Youtube, Linkedin, Twitter } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
-    <footer style={{ backgroundColor: "#00693F" }} className="py-12 text-white">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 md:px-72">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-6">
+
+    <footer style={{ backgroundColor: "#00693F" }} className="text-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
+
           {/* DirectEd Logo and Contact Info */}
           <div className="md:col-span-1">
             <div className="flex items-center mb-4 space-x-2">
