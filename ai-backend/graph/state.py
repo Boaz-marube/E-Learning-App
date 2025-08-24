@@ -2,6 +2,8 @@
 
 from typing import List, TypedDict, Annotated, Optional, Dict, Any
 from langchain_core.messages import BaseMessage
+from typing_extensions import TypedDict
+
 
 class GraphState(TypedDict):
     """

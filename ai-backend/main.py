@@ -5,10 +5,14 @@ from pydantic import BaseModel
 from typing import Optional
 from langchain_core.messages import HumanMessage
 from fastapi.middleware.cors import CORSMiddleware 
-
+# from graph_router import router 
+from langserve_routes import router as langserve_router
 
 from graph.graph import create_enhanced_graph
 from graph.synthesizer import response_synthesizer_node
+from graph_instance import graph_app  
+from langserve import add_routes  
+
 
 app = FastAPI(title="DirectEd AI Tutor API")
 
@@ -69,6 +73,10 @@ async def chat_endpoint(request: ChatRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat processing failed: {str(e)}")
+
+
+add_routes(app, graph_app, path="/graph")
+    
 
 @app.get("/")
 async def root():
