@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { CourseDetail } from '../types/course';
+import { api } from '../utils/api';
 
 // Mock course data
 const mockCourseData: CourseDetail = {
@@ -57,13 +58,8 @@ export const useCourseDetail = (courseId: string) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8090/api/courses/${courseId}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch course');
-        }
-        
-        const result = await response.json();
+        const response = await api.get(`/api/courses/${courseId}`);
+        const result = response.data;
         
         if (result.success && result.data) {
           // Transform backend data to frontend format
