@@ -87,6 +87,8 @@ export const getCourses = async (
       price: course.price,
       duration: course.duration || 0,
       thumbnail: course.thumbnail,
+      previewVideoUrl: course.previewVideoUrl,
+      videoUrl: course.videoUrl,
       tags: course.tags,
       isPublished: course.isPublished,
       isFeatured: course.isFeatured,
@@ -190,6 +192,8 @@ export const getCourseById = async (
       price: course.price,
       duration: course.duration || 0,
       thumbnail: course.thumbnail,
+      previewVideoUrl: course.previewVideoUrl,
+      videoUrl: course.videoUrl,
       tags: course.tags,
       isPublished: course.isPublished,
       isFeatured: course.isFeatured,
@@ -236,6 +240,8 @@ export const createCourse = async (
       );
     }
 
+    const { previewVideoUrl, videoUrl, ...otherFields } = req.body;
+    
     const course = await CourseModel.create({
       title,
       description,
@@ -244,6 +250,8 @@ export const createCourse = async (
       level,
       price,
       thumbnail: thumbnail || "",
+      previewVideoUrl: previewVideoUrl || "",
+      videoUrl: videoUrl || "",
       tags: tags || [],
       isPublished: false,
       isFeatured: false,
