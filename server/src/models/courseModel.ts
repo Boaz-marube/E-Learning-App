@@ -3,6 +3,8 @@ import { Course } from '../../../types';
 
 export interface ICourse extends Document, Omit<Course, '_id' | 'instructor'> {
   instructor: mongoose.Types.ObjectId;
+  previewVideoUrl?: string;
+  videoUrl?: string;
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -45,6 +47,14 @@ const courseSchema = new Schema<ICourse>({
     default: []
   },
   thumbnail: {
+    type: String,
+    default: ''
+  },
+  previewVideoUrl: {
+    type: String,
+    default: ''
+  },
+  videoUrl: {
     type: String,
     default: ''
   },

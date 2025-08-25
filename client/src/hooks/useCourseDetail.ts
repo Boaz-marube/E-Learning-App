@@ -57,19 +57,56 @@ export const useCourseDetail = (courseId: string) => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        // TODO: Replace with actual API call
-        // const response = await fetch(`/api/courses/${courseId}`);
-        // const data = await response.json();
+        const response = await fetch(`http://localhost:8090/api/courses/${courseId}`);
         
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        if (!response.ok) {
+          throw new Error('Failed to fetch course');
+        }
         
-        // Use mock data for now
-        setCourse({
-          ...mockCourseData,
-          id: courseId
-        });
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          // Transform backend data to frontend format
+          const courseData: CourseDetail = {
+            id: result.data._id,
+            title: result.data.title,
+            description: result.data.description,
+            longDescription: result.data.description, // Use description as longDescription for now
+            instructor: {
+              name: result.data.instructor.name || 'Unknown Instructor',
+              bio: result.data.instructor.bio || 'No bio available',
+              avatar: '/api/placeholder/80/80',
+              credentials: 'Course Instructor'
+            },
+            duration: `${result.data.duration} hours`,
+            students: result.data.enrollmentCount || 0,
+            rating: result.data.rating || 0,
+            level: result.data.level || 'Beginner',
+            category: result.data.category || 'General',
+            thumbnail: result.data.thumbnail || '/api/placeholder/800/450',
+            previewVideoUrl: result.data.previewVideoUrl,
+            videoUrl: result.data.videoUrl,
+            price: `$${result.data.price}`,
+            learningObjectives: [
+              "Master the course concepts",
+              "Apply practical skills",
+              "Complete hands-on projects"
+            ],
+            prerequisites: [
+              "Basic understanding of the subject",
+              "Access to a computer"
+            ],
+            lessons: mockCourseData.lessons, // Use mock lessons for now
+            isEnrolled: result.data.isEnrolled || false,
+            progress: 0
+          };
+          
+          setCourse(courseData);
+        } else {
+          throw new Error('Invalid response format');
+        }
       } catch (err) {
+        console.error('Error fetching course:', err);
         setError('Failed to fetch course details');
       } finally {
         setLoading(false);

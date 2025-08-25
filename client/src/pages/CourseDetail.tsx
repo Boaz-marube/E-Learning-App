@@ -119,14 +119,26 @@ const CourseDetail: React.FC = () => {
               </div>
             </div>
 
-            {/* Course Image */}
+            {/* Course Video/Image */}
             <div className="aspect-video relative overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
-              <img
-                src={course.thumbnail}
-                alt={`${course.title} course preview`}
-                className="w-full h-full object-cover"
-              />
-              {!isEnrolled && (
+              {course.previewVideoUrl ? (
+                <video
+                  src={course.previewVideoUrl}
+                  poster={course.thumbnail}
+                  controls
+                  className="w-full h-full object-cover"
+                  preload="metadata"
+                >
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <img
+                  src={course.thumbnail}
+                  alt={`${course.title} course preview`}
+                  className="w-full h-full object-cover"
+                />
+              )}
+              {!isEnrolled && !course.previewVideoUrl && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                   <button 
                     onClick={handleEnroll}

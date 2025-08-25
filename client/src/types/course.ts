@@ -25,6 +25,8 @@ export interface CourseDetail {
   level: string;
   category: string;
   thumbnail: string;
+  previewVideoUrl?: string;
+  videoUrl?: string;
   price: string;
   learningObjectives: string[];
   prerequisites: string[];

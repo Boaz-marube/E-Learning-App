@@ -12,6 +12,8 @@ export interface Course {
   duration: number;
   level: CourseLevel;
   thumbnail?: string;
+  previewVideoUrl?: string;
+  videoUrl?: string;
   tags?: string[];
   isFeatured: boolean;
   isPublished: boolean;
@@ -36,6 +38,8 @@ export interface CourseDetails {
   duration: number;
   level: CourseLevel;
   thumbnail?: string;
+  previewVideoUrl?: string;
+  videoUrl?: string;
   tags?: string[];
   isFeatured: boolean;
   isPublished: boolean;
@@ -66,6 +70,8 @@ export interface CourseCreateRequest {
   level: CourseLevel;
   price: number;
   thumbnail?: string;
+  previewVideoUrl?: string;
+  videoUrl?: string;
   tags?: string[];
 }
 
@@ -76,6 +82,8 @@ export interface CourseUpdateRequest {
   level?: CourseLevel;
   price?: number;
   thumbnail?: string;
+  previewVideoUrl?: string;
+  videoUrl?: string;
   tags?: string[];
   isPublished?: boolean;
   isFeatured?: boolean;
