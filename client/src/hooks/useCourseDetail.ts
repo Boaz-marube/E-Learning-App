@@ -67,7 +67,7 @@ export const useCourseDetail = (courseId: string) => {
             id: result.data._id,
             title: result.data.title,
             description: result.data.description,
-            longDescription: result.data.description, // Use description as longDescription for now
+            longDescription: result.data.description, 
             instructor: {
               name: result.data.instructor.name || 'Unknown Instructor',
               bio: result.data.instructor.bio || 'No bio available',
@@ -92,7 +92,7 @@ export const useCourseDetail = (courseId: string) => {
               "Basic understanding of the subject",
               "Access to a computer"
             ],
-            lessons: mockCourseData.lessons, // Use mock lessons for now
+            lessons: mockCourseData.lessons, 
             isEnrolled: result.data.isEnrolled || false,
             progress: 0
           };
