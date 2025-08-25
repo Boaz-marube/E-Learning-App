@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../utils/api';
 
 interface Course {
   id: string;
@@ -20,11 +21,8 @@ export const useFeaturedCourses = () => {
   useEffect(() => {
     const fetchFeaturedCourses = async () => {
       try {
-        const response = await fetch('/api/courses/featured');
-        if (!response.ok) {
-          throw new Error('Failed to fetch courses');
-        }
-        const result = await response.json();
+        const response = await api.get('/api/courses/featured');
+        const result = response.data;
         if (result.success && result.data) {
           // Transform backend data to match frontend interface
           const transformedCourses = result.data.map((course: any) => ({
