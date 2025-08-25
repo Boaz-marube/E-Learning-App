@@ -3,10 +3,13 @@ import CourseModel from '../models/courseModel';
 
 export const updateCourseThumbnails = async (req: Request, res: Response) => {
   try {
-    // Update specific courses with new thumbnails
+    // Update specific courses with new thumbnails and video URLs
     await CourseModel.updateOne(
       { title: 'Complete React Development' },
-      { thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop' }
+      { 
+        thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop',
+        previewVideoUrl: 'https://res.cloudinary.com/dqtieesdu/video/upload/v1756091519/2887463-hd_1920_1080_25fps_xwzc8a.mp4'
+      }
     );
 
     await CourseModel.updateOne(
