@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string) => {
     try {
       const response = await api.post('/api/auth/login', { email, password });
-      // Fix: Remove .data - backend sends user and token directly
+     
       const { token: newToken, user: userData } = response.data;
       
       setToken(newToken);
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signup = async (name: string, email: string, password: string, role: string) => {
     try {
       const response = await api.post('/api/auth/signup', { name, email, password, role });
-      // Fix: Remove .data - backend sends user and token directly
+     
       const { token: newToken, user: userData } = response.data;
       
       setToken(newToken);

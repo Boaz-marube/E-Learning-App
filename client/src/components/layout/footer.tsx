@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             <div className="space-y-2 text-sm">
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
-                <span>directedbuh.com</span>
+                <span>directed@dev.com</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" />
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4" />
-                <span>Somewhere in the World</span>
+                <span>NF, Silicon Valley</span>
               </div>
             </div>
           </div>

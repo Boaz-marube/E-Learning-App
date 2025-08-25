@@ -22,7 +22,7 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
-// Temporary seed route (remove in production)
+// seed route 
 app.get('/seed', async (req, res) => {
   try {
     const { seedDatabase } = await import('./utils/seeder');
@@ -33,15 +33,6 @@ app.get('/seed', async (req, res) => {
   }
 });
 
-// Update course thumbnails
-app.get('/update-thumbnails', async (req, res) => {
-  try {
-    const { updateCourseThumbnails } = await import('./controllers/updateController');
-    await updateCourseThumbnails(req, res);
-  } catch (error) {
-    res.status(500).json({ status: 'ERROR', message: 'Update failed', error });
-  }
-});
 
 (async function startUp() {
   try {

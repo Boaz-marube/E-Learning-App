@@ -173,7 +173,7 @@ export const getDemoLesson = async (
   next: NextFunction
 ) => {
   try {
-    // Hardcoded demo video (3-5MB as per requirements)
+    // Hardcoded demo video 
     const demoVideo = {
       videoUrl: "https://res.cloudinary.com/demo/video/upload/v1234567890/sample_demo_lesson.mp4",
       title: "Introduction to Programming - Demo Lesson",
