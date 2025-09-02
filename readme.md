@@ -183,4 +183,7 @@ This project is licensed under the MIT License.
 | [Bereket Eshete] | Full Stack Developer | [@Bereket-Eshete](https://github.com/Bereket-Eshete) |
 | [Sena Kebede] | Gen AI Developer | [@SenaKebe](https://github.com/SenaKebe) |
 | [Mahder Hawaz] | Full Stack Developer | [@mahderhawaz](https://github.com/mahderhawaz) |
+| [June Kwamboka] | UI/UX Designer ||
 | [Solomon Nderitu] | Gen AI Developer | [@Solomon-Nderit](https://github.com/Solomon-Nderit) |
+| [Nuhamin W] | UI/UX Designer | |
+| [Finlay Ndung'u] | UI/UX Designer | |
